@@ -1,0 +1,124 @@
+/**
+ * ARTEVO DESIGN TOKENS — "Museum Foundation" theme
+ * ---------------------------------------------------------------------------
+
+ */
+
+:root {
+    /* ---------- Color: Porcelain (page background) ---------- */
+    --porcelain-50: #F8F5EF;
+    --porcelain-100: #F1ECE1;
+
+    /* ---------- Color: Ink (dark surfaces + primary text) ---------- */
+    --ink-950: #15120D;
+    --ink-900: #1E1B16;
+    --ink-800: #2B251D;
+    --ink-700: #5B5548;
+
+    /* ---------- Color: text/borders that sit on a dark ink surface ---------- */
+    --parchment-100: #EDE7D8;
+    --stone-400: #B8AF9B;
+
+    /* ---------- Color: neutral warm greys for hairlines on light surfaces ---------- */
+    --stone-600: #8C8474;
+    --stone-200: #E7E1D3;
+
+    /* ---------- Color: Brass (accent — CTAs, authenticity marks) ---------- */
+    --brass-700: #8A6A22;
+    --brass-600: #A9812E;
+    --brass-100: #F1E4C4;
+
+    /* ---------- Color: Heritage Green (secondary accent / trust / success) ---------- */
+    --green-700: #14352A;
+    --green-600: #1F4D3D;
+    --green-100: #E3ECE7;
+
+    /* ---------- Color: Terracotta (sparing warm highlight, e.g. "live auction") ---------- */
+    --terracotta-600: #B5502F;
+    --terracotta-100: #F2DFD6;
+
+    /* ---------- Color: Status ---------- */
+    --red-600: #A8342A;
+    --red-100: #F5DEDC;
+
+    --white: #FFFFFF;
+
+    /* ---------- Semantic aliases — light-mode-first ---------- */
+    --color-bg: var(--porcelain-50);
+    --color-bg-alt: var(--porcelain-100);
+    --color-surface: var(--white);
+    --color-text: var(--ink-900);
+    --color-text-muted: var(--ink-700);
+    --color-text-on-dark: var(--parchment-100);
+    --color-text-on-dark-muted: var(--stone-400);
+    --color-border: var(--stone-200);
+    --color-border-on-dark: rgba(237, 231, 216, 0.14);
+    --color-accent: var(--brass-600);
+    --color-accent-hover: var(--brass-700);
+    --color-success: var(--green-600);
+    --color-danger: var(--red-600);
+    --color-dark-surface: var(--ink-900);
+    --color-darker-surface: var(--ink-950);
+
+    /* Glass surface — kept for the vitrine "museum case" motif, reused
+       sparingly (e.g. a future featured-artifact spotlight), not the hero. */
+    --glass-bg: rgba(30, 27, 22, 0.03);
+    --glass-border: rgba(169, 129, 46, 0.4);
+    --glass-blur: 14px;
+
+    /* ---------- Typography ---------- */
+    /* Playfair Display: the elegant high-contrast serif behind most premium
+       museum/heritage sites. Inter stays for body copy so dense app screens
+       (tables, forms, dashboards) remain highly legible. */
+    --font-display: "Playfair Display", "Georgia", serif;
+    --font-body: "Inter", "Segoe UI", sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.6rem;
+    --text-3xl: 2.1rem;
+    --text-4xl: 2.75rem;
+    --text-5xl: 3.75rem;
+
+    /* ---------- Spacing scale ---------- */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.5rem;
+    --space-6: 2rem;
+    --space-8: 3rem;
+    --space-10: 4rem;
+    --space-12: 6rem;
+    --space-16: 8rem;
+
+    /* ---------- Layout ---------- */
+    --container-max: 1240px;
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --shadow-sm: 0 1px 2px rgba(30, 27, 22, 0.05);
+    --shadow-md: 0 8px 24px rgba(30, 27, 22, 0.10);
+    --shadow-lg: 0 24px 60px rgba(30, 27, 22, 0.18);
+
+    /* ---------- Motion ---------- */
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --duration-fast: 150ms;
+    --duration-base: 320ms;
+    --duration-slow: 900ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}

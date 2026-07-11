@@ -1,0 +1,57 @@
+/**
+ * ARTEVO ANIMATIONS
+ * Reusable transition/animation classes. JS only toggles these classes —
+ * it never sets inline animation styles — so motion stays centrally tuned.
+ * All keyframes are skipped automatically under prefers-reduced-motion
+ * (handled once in variables.css).
+ */
+
+/* Elements start hidden + offset, then JS (scroll-reveal.js) adds
+   .is-visible via IntersectionObserver as they enter the viewport. */
+[data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity var(--duration-slow) var(--ease-out),
+                transform var(--duration-slow) var(--ease-out);
+}
+
+[data-reveal].is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+[data-reveal="fade"] {
+    transform: none;
+}
+
+/* Stagger helper — apply alongside data-reveal on repeated items */
+[data-reveal][data-reveal-delay="1"] { transition-delay: 80ms; }
+[data-reveal][data-reveal-delay="2"] { transition-delay: 160ms; }
+[data-reveal][data-reveal-delay="3"] { transition-delay: 240ms; }
+[data-reveal][data-reveal-delay="4"] { transition-delay: 320ms; }
+
+@keyframes av-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes av-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.av-float {
+    animation: av-float 6s ease-in-out infinite;
+}
+
+/* Animated counters (stat numbers) — JS increments the text content;
+   this just gives the digits a gentle settle-in. */
+.av-counter {
+    display: inline-block;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Mobile nav panel open/close */
+.av-nav__mobile-panel {
+    animation: av-fade-in var(--duration-fast) var(--ease-out);
+}
