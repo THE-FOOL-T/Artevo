@@ -4,12 +4,7 @@
 
 @section('content')
 
-    {{-- ============================= HERO =============================
-         Full-bleed crossfading photo slider. Placeholder photography for
-         now (Lorem Picsum) — swap for curated imagery or a dynamic feed
-         of real featured-artifact photos once that module exists
-         (Phase 7-9). Nav renders transparent/light-text over this via
-         the [data-hero] hook in navigation.js. --}}
+   
     <section class="av-hero" data-hero>
         <div class="av-hero__slide is-active" style="background-image: url('https://picsum.photos/seed/artevo-artifact-1/1600/900')"></div>
         <div class="av-hero__slide" style="background-image: url('https://picsum.photos/seed/artevo-artifact-2/1600/900')"></div>
