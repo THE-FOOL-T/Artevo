@@ -29,8 +29,8 @@
             <div>
                 <h4>Get started</h4>
                 <ul>
-                    <li><a href="/register">Create an account</a></li>
-                    <li><a href="/login">Sign in</a></li>
+                    <li><a href="{{ route('register') }}">Create an account</a></li>
+                    <li><a href="{{ route('login') }}">Sign in</a></li>
                 </ul>
             </div>
         </div>
