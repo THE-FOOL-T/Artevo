@@ -10,6 +10,9 @@ import { initScrollReveal } from './modules/scroll-reveal.js';
 import { initToast } from './modules/toast.js';
 import { initRipple } from './modules/ripple.js';
 import { initHeroSlider } from './modules/hero-slider.js';
+import { initDropdown } from './modules/dropdown.js';
+import { initModal } from './modules/modal.js';
+import { initPasswordToggle } from './modules/password-toggle.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     initNavigation();
@@ -17,4 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initToast();
     initRipple();
     initHeroSlider();
+    initDropdown();
+    initModal();
+    initPasswordToggle();
 });

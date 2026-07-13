@@ -1,6 +1,7 @@
 /**
  * Reveals elements marked [data-reveal] as they enter the viewport, and
- * drives the animated stat counters marked [data-counter]. 
+ * drives the animated stat counters marked [data-counter]. Both respect
+ * prefers-reduced-motion by skipping straight to the final state.
  */
 export function initScrollReveal() {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
