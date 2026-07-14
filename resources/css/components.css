@@ -49,6 +49,10 @@
     background: rgba(237, 231, 216, 0.12);
     color: var(--white);
 }
+.av-nav.is-on-dark-hero:not(.is-scrolled) .av-dropdown__trigger {
+    border-color: rgba(237, 231, 216, 0.4);
+    color: var(--parchment-100);
+}
 
 .av-nav.is-scrolled {
     box-shadow: var(--shadow-md);
