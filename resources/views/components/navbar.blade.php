@@ -34,6 +34,9 @@
 
                     <a href="{{ route('dashboard') }}" class="av-dropdown__item">Dashboard</a>
                     <a href="{{ route('profile.edit') }}" class="av-dropdown__item">Profile</a>
+                    @if (auth()->user()->isAdmin())
+                        <a href="{{ route('admin.users.index') }}" class="av-dropdown__item">Manage users</a>
+                    @endif
                     <hr class="av-dropdown__divider">
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
@@ -63,6 +66,9 @@
         @else
             <a href="{{ route('dashboard') }}">Dashboard</a>
             <a href="{{ route('profile.edit') }}">Profile</a>
+            @if (auth()->user()->isAdmin())
+                <a href="{{ route('admin.users.index') }}">Manage users</a>
+            @endif
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="av-btn av-btn--outline-dark av-btn--block">Log out</button>

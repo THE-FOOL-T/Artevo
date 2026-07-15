@@ -1,0 +1,61 @@
+@extends('layouts.app')
+
+@section('title', 'Admin Dashboard — Artevo')
+
+@section('content')
+    <section class="av-section av-section--white" style="padding-top: var(--space-10);">
+        <div class="container">
+            @include('dashboards.partials.verification-banner')
+
+            <x-tag>Administrator Dashboard</x-tag>
+            <h1 style="margin-top: var(--space-4);">Welcome back, {{ $user->name }}</h1>
+            <p style="max-width: 560px;">User accounts are live. Museum, artifact, verification and auction
+                metrics surface here as those modules go live.</p>
+
+            <div class="grid grid-4" style="margin-top: var(--space-8);">
+                <x-card data-reveal>
+                    <span class="av-card__eyebrow">Live</span>
+                    <div class="av-stat-num" style="color: var(--brass-700); font-size: var(--text-3xl);">{{ number_format($totalUsers) }}</div>
+                    <p style="margin-top: var(--space-2);">Total registered users</p>
+                </x-card>
+                @foreach (['admin' => 'Administrators', 'curator' => 'Curators', 'collector' => 'Collectors', 'visitor' => 'Visitors'] as $role => $label)
+                    <x-card data-reveal>
+                        <span class="av-card__eyebrow">Live</span>
+                        <div class="av-stat-num" style="color: var(--brass-700); font-size: var(--text-3xl);">{{ number_format($roleCounts[$role] ?? 0) }}</div>
+                        <p style="margin-top: var(--space-2);">{{ $label }}</p>
+                    </x-card>
+                @endforeach
+            </div>
+
+            <div class="grid grid-4" style="margin-top: var(--space-6);">
+                <x-card data-reveal>
+                    <span class="av-card__eyebrow">Coming in Phase 5–8</span>
+                    <h3>Museums &amp; artifacts</h3>
+                    <p>Total counts and pending approvals.</p>
+                </x-card>
+                <x-card data-reveal data-reveal-delay="1">
+                    <span class="av-card__eyebrow">Coming in Phase 11</span>
+                    <h3>Verification queue</h3>
+                    <p>Pending and completed verification requests.</p>
+                </x-card>
+                <x-card data-reveal data-reveal-delay="2">
+                    <span class="av-card__eyebrow">Coming in Phase 13–14</span>
+                    <h3>Auctions &amp; revenue</h3>
+                    <p>Active auctions and platform revenue.</p>
+                </x-card>
+                <x-card data-reveal data-reveal-delay="3">
+                    <span class="av-card__eyebrow">Coming in Phase 4</span>
+                    <h3>Activity log</h3>
+                    <p>A searchable feed of platform-wide actions.</p>
+                </x-card>
+            </div>
+
+            <x-card class="mt-8">
+                <span class="av-card__eyebrow">Manage</span>
+                <h3>Users &amp; roles</h3>
+                <p>View every account and change a user's role.</p>
+                <a href="{{ route('admin.users.index') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">Manage users &rarr;</a>
+            </x-card>
+        </div>
+    </section>
+@endsection
