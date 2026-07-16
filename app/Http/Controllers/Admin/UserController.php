@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\UserRoleChanged;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UpdateUserRoleRequest;
 use App\Models\User;
@@ -27,7 +28,16 @@ class UserController extends Controller
      */
     public function updateRole(UpdateUserRoleRequest $request, User $user): RedirectResponse
     {
-        $user->update(['role' => $request->validated('role')]);
+        $previousRole = $user->role;
+        $newRole = $request->validated('role');
+
+        $user->update(['role' => $newRole]);
+
+        // Two listeners consume this: LogRoleChange (activity log) and
+        // SendRoleChangedNotification (emails + notifies the user).
+        if ($previousRole !== $newRole) {
+            UserRoleChanged::dispatch($user, $request->user(), $previousRole, $newRole);
+        }
 
         return back()->with('success', "{$user->name}'s role was updated to {$user->roleLabel()}.");
     }

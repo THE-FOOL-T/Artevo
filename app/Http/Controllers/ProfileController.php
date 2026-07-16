@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateProfileRequest;
+use App\Services\ActivityLogger;
 use App\Services\AvatarService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -11,8 +12,10 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
-    public function __construct(private AvatarService $avatarService)
-    {
+    public function __construct(
+        private AvatarService $avatarService,
+        private ActivityLogger $activityLogger,
+    ) {
     }
 
     public function edit(Request $request): View
@@ -32,7 +35,8 @@ class ProfileController extends Controller
         $user = $request->user();
         $data = $request->safe()->only(['name', 'email']);
 
-        if ($request->hasFile('avatar')) {
+        $avatarChanged = $request->hasFile('avatar');
+        if ($avatarChanged) {
             $data['avatar_path'] = $this->avatarService->replace($user, $request->file('avatar'));
         }
 
@@ -45,6 +49,13 @@ class ProfileController extends Controller
         }
 
         $user->save();
+
+        $this->activityLogger->log(
+            action: 'user.profile-updated',
+            description: "{$user->name} updated their profile" . ($avatarChanged ? ' and avatar' : '') . '.',
+            user: $user,
+            properties: ['email_changed' => $emailChanged, 'avatar_changed' => $avatarChanged],
+        );
 
         return back()->with('success', 'Your profile has been updated.');
     }
@@ -60,6 +71,16 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
+
+        // Logged before deletion (with an explicit user_id) since the
+        // activity_logs.user_id foreign key is set to null-on-delete —
+        // the entry survives the account being removed, which is the
+        // point of an audit trail.
+        $this->activityLogger->log(
+            action: 'user.account-deleted',
+            description: "{$user->name} deleted their own account.",
+            user: $user,
+        );
 
         Auth::guard('web')->logout();
 
