@@ -735,6 +735,73 @@
 }
 
 /* ---------------------------------------------------------------------
+   Notification bell (uses the dropdown component's panel/item classes,
+   plus a few of its own for the badge and the wider notification list)
+--------------------------------------------------------------------- */
+.av-notification-badge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 3px;
+    border-radius: 999px;
+    background: var(--terracotta-600);
+    color: var(--white);
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 16px;
+    text-align: center;
+}
+
+.av-dropdown__panel--wide {
+    min-width: 320px;
+    max-width: 360px;
+    padding: 0;
+    overflow: hidden;
+}
+
+.av-notification-panel__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--ink-900);
+}
+
+.av-notification-panel__mark-all {
+    background: none;
+    border: none;
+    color: var(--brass-700);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+}
+
+.av-notification-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    border-radius: 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.av-notification-item strong {
+    font-size: var(--text-sm);
+    color: var(--ink-900);
+}
+
+.av-notification-item span {
+    font-size: var(--text-xs);
+    color: var(--ink-700);
+}
+
+/* ---------------------------------------------------------------------
    Avatar
 --------------------------------------------------------------------- */
 .av-avatar {

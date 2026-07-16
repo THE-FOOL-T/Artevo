@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleUpgradeController;
@@ -50,11 +52,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/become-collector', [RoleUpgradeController::class, 'store'])
         ->middleware('visitor')
         ->name('role-upgrade.store');
+
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
 });
 
 /*
 |--------------------------------------------------------------------------
-| Admin routes — Phase 3
+| Admin routes
 |--------------------------------------------------------------------------
 | Every route in this group is protected by the 'admin' middleware, not
 | just hidden from the nav — visiting it directly without the role
@@ -63,6 +69,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
     Route::patch('/users/{user}/role', [AdminUserController::class, 'updateRole'])->name('users.update-role');
+    Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
 });
 
 require __DIR__ . '/auth.php';

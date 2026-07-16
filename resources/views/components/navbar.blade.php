@@ -25,6 +25,8 @@
                 <a href="{{ route('login') }}" class="av-btn av-btn--outline-dark">Sign in</a>
                 <a href="{{ route('register') }}" class="av-btn av-btn--primary">Join Artevo</a>
             @else
+                <x-notification-bell />
+
                 <x-dropdown>
                     <x-slot name="trigger">
                         <x-avatar :user="auth()->user()" />
@@ -36,6 +38,7 @@
                     <a href="{{ route('profile.edit') }}" class="av-dropdown__item">Profile</a>
                     @if (auth()->user()->isAdmin())
                         <a href="{{ route('admin.users.index') }}" class="av-dropdown__item">Manage users</a>
+                        <a href="{{ route('admin.activity-logs.index') }}" class="av-dropdown__item">Activity log</a>
                     @endif
                     <hr class="av-dropdown__divider">
                     <form method="POST" action="{{ route('logout') }}">
@@ -66,8 +69,10 @@
         @else
             <a href="{{ route('dashboard') }}">Dashboard</a>
             <a href="{{ route('profile.edit') }}">Profile</a>
+            <a href="{{ route('notifications.index') }}">Notifications</a>
             @if (auth()->user()->isAdmin())
                 <a href="{{ route('admin.users.index') }}">Manage users</a>
+                <a href="{{ route('admin.activity-logs.index') }}">Activity log</a>
             @endif
             <form method="POST" action="{{ route('logout') }}">
                 @csrf

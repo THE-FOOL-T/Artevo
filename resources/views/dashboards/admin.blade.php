@@ -44,18 +44,27 @@
                     <p>Active auctions and platform revenue.</p>
                 </x-card>
                 <x-card data-reveal data-reveal-delay="3">
-                    <span class="av-card__eyebrow">Coming in Phase 4</span>
+                    <span class="av-card__eyebrow">Live</span>
                     <h3>Activity log</h3>
                     <p>A searchable feed of platform-wide actions.</p>
+                    <a href="{{ route('admin.activity-logs.index') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">View activity log &rarr;</a>
                 </x-card>
             </div>
 
-            <x-card class="mt-8">
-                <span class="av-card__eyebrow">Manage</span>
-                <h3>Users &amp; roles</h3>
-                <p>View every account and change a user's role.</p>
-                <a href="{{ route('admin.users.index') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">Manage users &rarr;</a>
-            </x-card>
+            <div class="grid grid-2 mt-8">
+                <x-card>
+                    <span class="av-card__eyebrow">Manage</span>
+                    <h3>Users &amp; roles</h3>
+                    <p>View every account and change a user's role.</p>
+                    <a href="{{ route('admin.users.index') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">Manage users &rarr;</a>
+                </x-card>
+                <x-card>
+                    <span class="av-card__eyebrow">Account</span>
+                    <h3>Your profile</h3>
+                    <p>Update your name, email, avatar, and password.</p>
+                    <a href="{{ route('profile.edit') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">Go to profile &rarr;</a>
+                </x-card>
+            </div>
         </div>
     </section>
 @endsection
