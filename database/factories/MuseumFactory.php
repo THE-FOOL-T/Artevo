@@ -41,6 +41,7 @@ class MuseumFactory extends Factory
             'longitude' => $this->faker->longitude(),
             'featured' => false,
             'verification_status' => Museum::VERIFICATION_PENDING,
+            'views_count' => 0,
         ];
     }
 

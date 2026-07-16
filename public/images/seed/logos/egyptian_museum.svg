@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <rect width="200" height="200" fill="#1c2b26" rx="16"/>
+  <circle cx="100" cy="100" r="82" fill="none" stroke="#d4af37" stroke-width="2.5" opacity="0.4"/>
+  <circle cx="100" cy="100" r="76" fill="none" stroke="#d4af37" stroke-width="1" opacity="0.2"/>
+  <g transform="translate(100,82) scale(0.85)">
+    <!-- Pyramid & Sun -->
+    <circle cx="0" cy="-28" r="16" fill="#d4af37" opacity="0.3"/>
+    <polygon points="0,-48 -55,22 55,22" fill="#293f38" stroke="#d4af37" stroke-width="2"/>
+    <polygon points="0,-48 0,22 55,22" fill="#d4af37" opacity="0.25"/>
+    <!-- Eye of Horus Motif on Pyramid -->
+    <path d="M-22,8 C-10,-4 10,-4 22,8 C10,20 -10,20 -22,8 Z" fill="none" stroke="#d4af37" stroke-width="2.5"/>
+    <circle cx="0" cy="8" r="5" fill="#d4af37"/>
+    <path d="M0,13 Q-5,22 -12,25" fill="none" stroke="#d4af37" stroke-width="2.5"/>
+    <path d="M6,12 L14,24" fill="none" stroke="#d4af37" stroke-width="2.5"/>
+    <rect x="-64" y="22" width="128" height="4" fill="#d4af37"/>
+  </g>
+  <text x="100" y="152" font-family="'Cinzel', 'Times New Roman', serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle" letter-spacing="2">EGYPTIAN MUSEUM</text>
+  <text x="100" y="168" font-family="sans-serif" font-size="9" font-weight="600" fill="#d4af37" text-anchor="middle" letter-spacing="3">CAIRO • EST. 1902</text>
+</svg>

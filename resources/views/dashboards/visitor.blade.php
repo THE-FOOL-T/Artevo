@@ -54,6 +54,7 @@
                     <h3>Watched Auctions</h3>
                     <p>Keep track of live auctions you are interested in.</p>
                     <p style="margin-top: var(--space-2); font-size: var(--text-sm); color: var(--stone-600);">Note: Upgrade to Collector to place bids.</p>
+                    <a href="{{ route('auctions.watchlist') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm); display: inline-block; margin-top: var(--space-3);">View watchlist &rarr;</a>
                 </x-card>
             </div>
         </div>

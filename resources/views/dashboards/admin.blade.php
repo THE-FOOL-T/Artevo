@@ -87,6 +87,12 @@
                     <a href="{{ route('admin.users.index') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">Manage users &rarr;</a>
                 </x-card>
                 <x-card>
+                    <span class="av-card__eyebrow">Manage</span>
+                    <h3>Curator Applications</h3>
+                    <p>Review and approve requests from users to become Curators.</p>
+                    <a href="{{ route('admin.curator-applications.index') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">Review queue &rarr;</a>
+                </x-card>
+                <x-card>
                     <span class="av-card__eyebrow">Account</span>
                     <h3>Your profile</h3>
                     <p>Update your name, email, avatar, and password.</p>

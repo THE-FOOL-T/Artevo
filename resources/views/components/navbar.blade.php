@@ -16,6 +16,9 @@
                 <li><a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'is-active' : '' }}">Home</a></li>
                 <li><a href="{{ route('museums.index') }}" class="{{ request()->routeIs('museums.*') ? 'is-active' : '' }}">Museums</a></li>
                 <li><a href="{{ route('artifacts.index') }}" class="{{ request()->routeIs('artifacts.*') ? 'is-active' : '' }}">Artifacts</a></li>
+                <li><a href="{{ route('collections.index') }}" class="{{ request()->routeIs('collections.*') ? 'is-active' : '' }}">Collections</a></li>
+                <li><a href="{{ route('exhibitions.index') }}" class="{{ request()->routeIs('exhibitions.*') ? 'is-active' : '' }}">Exhibitions</a></li>
+                <li><a href="{{ route('auctions.index') }}" class="{{ request()->routeIs('auctions.*') ? 'is-active' : '' }}" style="position:relative;">Auctions</a></li>
                 <li><a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'is-active' : '' }}">About</a></li>
                 <li><a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'is-active' : '' }}">Contact</a></li>
             </ul>
@@ -42,10 +45,17 @@
                     @endif
                     @if (auth()->user()->isCollector())
                         <a href="{{ route('collector.artifacts.index') }}" class="av-dropdown__item">My collection</a>
+                        <a href="{{ route('collector.collections.index') }}" class="av-dropdown__item">My collections</a>
+                    @endif
+                    @if(auth()->user()->isCollector() || auth()->user()->isCurator())
+                        <a href="{{ route('certificates.index') }}" class="av-dropdown__item">My Certificates</a>
                     @endif
                     @if (auth()->user()->isAdmin())
                         <a href="{{ route('admin.users.index') }}" class="av-dropdown__item">Manage users</a>
                         <a href="{{ route('admin.activity-logs.index') }}" class="av-dropdown__item">Activity log</a>
+                        <a href="{{ route('admin.donations.index') }}" class="av-dropdown__item">Donations</a>
+                        <a href="{{ route('admin.qr-codes.index') }}" class="av-dropdown__item">QR Analytics</a>
+                        <a href="{{ route('admin.certificates.index') }}" class="av-dropdown__item">Certificates</a>
                     @endif
                     <hr class="av-dropdown__divider">
                     <form method="POST" action="{{ route('logout') }}">
@@ -69,6 +79,9 @@
         <a href="{{ route('home') }}">Home</a>
         <a href="{{ route('museums.index') }}">Museums</a>
         <a href="{{ route('artifacts.index') }}">Artifacts</a>
+        <a href="{{ route('collections.index') }}">Collections</a>
+        <a href="{{ route('exhibitions.index') }}">Exhibitions</a>
+        <a href="{{ route('auctions.index') }}">Auctions</a>
         <a href="{{ route('about') }}">About</a>
         <a href="{{ route('contact') }}">Contact</a>
         <hr style="border-color: var(--color-border); width: 100%;">
@@ -84,10 +97,17 @@
             @endif
             @if (auth()->user()->isCollector())
                 <a href="{{ route('collector.artifacts.index') }}">My collection</a>
+                <a href="{{ route('collector.collections.index') }}">My collections</a>
             @endif
             @if (auth()->user()->isAdmin())
                 <a href="{{ route('admin.users.index') }}">Manage users</a>
                 <a href="{{ route('admin.activity-logs.index') }}">Activity log</a>
+                <a href="{{ route('admin.donations.index') }}">Donations</a>
+                <a href="{{ route('admin.qr-codes.index') }}">QR Analytics</a>
+                <a href="{{ route('admin.certificates.index') }}">Certificates</a>
+            @endif
+            @if(auth()->user()->isCollector() || auth()->user()->isCurator())
+                <a href="{{ route('certificates.index') }}">My Certificates</a>
             @endif
             <form method="POST" action="{{ route('logout') }}">
                 @csrf

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <rect width="200" height="200" fill="#112238" rx="16"/>
+  <circle cx="100" cy="100" r="82" fill="none" stroke="#c5a059" stroke-width="2.5" opacity="0.35"/>
+  <g transform="translate(100,82) scale(0.85)">
+    <!-- Assyrian Star / Sun of Shamash & Cuneiform Tablet Outline -->
+    <polygon points="0,-45 12,-15 42,-15 18,5 28,35 0,18 -28,35 -18,5 -42,-15 -12,-15" fill="none" stroke="#c5a059" stroke-width="2.5"/>
+    <circle cx="0" cy="-3" r="14" fill="#c5a059" opacity="0.25"/>
+    <!-- Central Cuneiform stylus mark motif -->
+    <polygon points="0,-15 -8,5 8,5" fill="#c5a059"/>
+    <polygon points="0,15 -6,-3 6,-3" fill="#c5a059"/>
+    <line x1="-25" y1="28" x2="25" y2="28" stroke="#c5a059" stroke-width="2"/>
+  </g>
+  <text x="100" y="152" font-family="'Cinzel', 'Times New Roman', serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle" letter-spacing="1.5">IRAQ MUSEUM</text>
+  <text x="100" y="168" font-family="sans-serif" font-size="9" font-weight="600" fill="#c5a059" text-anchor="middle" letter-spacing="3">BAGHDAD • EST. 1923</text>
+</svg>

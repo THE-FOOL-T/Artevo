@@ -58,8 +58,8 @@
                     <h3>Watchlist & Bids</h3>
                     <p>Track live auctions and view your bidding history.</p>
                     <div style="display: flex; gap: var(--space-4); margin-top: var(--space-2);">
-                        <a href="{{ route('collector.auctions.watchlist') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">Watchlist</a>
-                        <a href="{{ route('collector.auctions.bids') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">Bid history</a>
+                        <a href="{{ route('auctions.watchlist') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">Watchlist</a>
+                        <a href="{{ route('auctions.bids') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">Bid history</a>
                     </div>
                 </x-card>
                 <x-card>

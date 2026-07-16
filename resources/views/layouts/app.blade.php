@@ -20,8 +20,9 @@
     @stack('meta')
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('styles')
 </head>
-<body>
+<body data-authenticated="{{ auth()->check() ? '1' : '0' }}">
     {{-- Keyboard/screen-reader users can jump straight past navigation --}}
     <a href="#main-content" class="skip-link">Skip to main content</a>
 

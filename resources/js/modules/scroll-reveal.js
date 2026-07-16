@@ -3,27 +3,46 @@
  * drives the animated stat counters marked [data-counter]. Both respect
  * prefers-reduced-motion by skipping straight to the final state.
  */
-export function initScrollReveal() {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const revealTargets = document.querySelectorAll('[data-reveal]');
-    const counterTargets = document.querySelectorAll('[data-counter]');
 
-    if (prefersReducedMotion || !('IntersectionObserver' in window)) {
-        revealTargets.forEach((el) => el.classList.add('is-visible'));
-        counterTargets.forEach((el) => runCounter(el));
+let _revealObserver = null;
+const _prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+export function initScrollReveal() {
+    _setupObserver();
+    _observeAll(document);
+}
+
+/**
+ * Call this after injecting new HTML into the DOM (e.g. AJAX results)
+ * so that newly-added [data-reveal] elements get observed too.
+ */
+export function revealNewElements(root = document) {
+    if (_prefersReduced || !('IntersectionObserver' in window)) {
+        root.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('is-visible'));
+        root.querySelectorAll('[data-counter]').forEach((el) => runCounter(el));
+        return;
+    }
+    _observeAll(root);
+}
+
+function _setupObserver() {
+    if (_revealObserver) return; // already set up
+
+    if (_prefersReduced || !('IntersectionObserver' in window)) {
+        // Skip animations — just show everything immediately.
+        document.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('is-visible'));
+        document.querySelectorAll('[data-counter]').forEach((el) => runCounter(el));
         return;
     }
 
-    const revealObserver = new IntersectionObserver((entries, observer) => {
+    _revealObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach((entry) => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('is-visible');
                 observer.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.15 });
-
-    revealTargets.forEach((el) => revealObserver.observe(el));
+    }, { threshold: 0.1 }); // lowered from 0.15 so above-fold items trigger
 
     const counterObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach((entry) => {
@@ -34,7 +53,16 @@ export function initScrollReveal() {
         });
     }, { threshold: 0.4 });
 
-    counterTargets.forEach((el) => counterObserver.observe(el));
+    // Store counter observer on the module-level for use in _observeAll
+    _revealObserver._counterObs = counterObserver;
+}
+
+function _observeAll(root) {
+    if (!_revealObserver) return;
+    root.querySelectorAll('[data-reveal]:not(.is-visible)').forEach((el) => _revealObserver.observe(el));
+    if (_revealObserver._counterObs) {
+        root.querySelectorAll('[data-counter]').forEach((el) => _revealObserver._counterObs.observe(el));
+    }
 }
 
 /**

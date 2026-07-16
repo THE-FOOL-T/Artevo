@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <rect width="200" height="200" fill="#6b1515" rx="16"/>
+  <circle cx="100" cy="100" r="82" fill="none" stroke="#e6c280" stroke-width="2" opacity="0.4"/>
+  <g transform="translate(100,82) scale(0.9)">
+    <!-- Traditional Chinese Imperial Seal / Palace Roof Silhouette -->
+    <path d="M-50,-20 L0,-45 L50,-20 L45,-12 L-45,-12 Z" fill="#e6c280"/>
+    <rect x="-40" y="-12" width="80" height="6" fill="#e6c280"/>
+    <rect x="-32" y="-6" width="64" height="34" fill="none" stroke="#e6c280" stroke-width="3"/>
+    <!-- Stylized Seal Characters / Motif -->
+    <rect x="-18" y="4" width="12" height="14" fill="#e6c280"/>
+    <rect x="6" y="4" width="12" height="14" fill="#e6c280"/>
+    <line x1="-32" y1="36" x2="32" y2="36" stroke="#e6c280" stroke-width="4"/>
+  </g>
+  <text x="100" y="152" font-family="'Cinzel', 'Times New Roman', serif" font-size="11.5" font-weight="bold" fill="#ffffff" text-anchor="middle" letter-spacing="1">NATIONAL PALACE MUSEUM</text>
+  <text x="100" y="168" font-family="sans-serif" font-size="9" font-weight="600" fill="#e6c280" text-anchor="middle" letter-spacing="3">TAIPEI • EST. 1925</text>
+</svg>
