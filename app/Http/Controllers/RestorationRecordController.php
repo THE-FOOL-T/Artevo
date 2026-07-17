@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreRestorationRecordRequest;
-use App\Http\Requests\UpdateRestorationRecordRequest;
+use App\Http\Requests\SaveRestorationRecordRequest;
 use App\Models\Artifact;
 use App\Models\RestorationRecord;
 use App\Services\ActivityLogger;
@@ -19,7 +18,7 @@ class RestorationRecordController extends Controller
         private ActivityLogger           $activityLogger,
     ) {}
 
-    public function store(StoreRestorationRecordRequest $request, Artifact $artifact): JsonResponse
+    public function store(SaveRestorationRecordRequest $request, Artifact $artifact): JsonResponse
     {
         Gate::authorize('manageRestorationRecords', $artifact);
 
@@ -35,7 +34,7 @@ class RestorationRecordController extends Controller
         return response()->json(['success' => true, 'record' => $this->recordToArray($record)]);
     }
 
-    public function update(UpdateRestorationRecordRequest $request, Artifact $artifact, RestorationRecord $record): JsonResponse
+    public function update(SaveRestorationRecordRequest $request, Artifact $artifact, RestorationRecord $record): JsonResponse
     {
         Gate::authorize('manageRestorationRecords', $artifact);
 

@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreCuratorNoteRequest;
-use App\Http\Requests\UpdateCuratorNoteRequest;
+use App\Http\Requests\SaveCuratorNoteRequest;
 use App\Models\Artifact;
 use App\Models\CuratorNote;
 use App\Services\ActivityLogger;
@@ -18,7 +17,7 @@ class CuratorNoteController extends Controller
         private ActivityLogger     $activityLogger,
     ) {}
 
-    public function store(StoreCuratorNoteRequest $request, Artifact $artifact): JsonResponse
+    public function store(SaveCuratorNoteRequest $request, Artifact $artifact): JsonResponse
     {
         Gate::authorize('manageCuratorNotes', $artifact);
 
@@ -34,7 +33,7 @@ class CuratorNoteController extends Controller
         return response()->json(['success' => true, 'note' => $this->noteToArray($note)]);
     }
 
-    public function update(UpdateCuratorNoteRequest $request, Artifact $artifact, CuratorNote $note): JsonResponse
+    public function update(SaveCuratorNoteRequest $request, Artifact $artifact, CuratorNote $note): JsonResponse
     {
         Gate::authorize('manageCuratorNotes', $artifact);
 
