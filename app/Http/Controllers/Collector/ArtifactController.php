@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Collector;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreArtifactRequest;
-use App\Http\Requests\UpdateArtifactRequest;
+use App\Http\Requests\SaveArtifactRequest;
 use App\Models\Artifact;
 use App\Models\ArtifactCategory;
 use App\Models\ArtifactMaterial;
@@ -40,7 +39,7 @@ class ArtifactController extends Controller
         ]);
     }
 
-    public function store(StoreArtifactRequest $request): RedirectResponse
+    public function store(SaveArtifactRequest $request): RedirectResponse
     {
         $artifact = $this->artifactService->createForCollector(
             $request->user(),
@@ -70,7 +69,7 @@ class ArtifactController extends Controller
         ]);
     }
 
-    public function update(UpdateArtifactRequest $request, Artifact $artifact): RedirectResponse
+    public function update(SaveArtifactRequest $request, Artifact $artifact): RedirectResponse
     {
         $this->artifactService->update(
             $artifact,
