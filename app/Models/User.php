@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
@@ -135,5 +137,31 @@ class User extends Authenticatable implements MustVerifyEmail
             self::ROLE_COLLECTOR => 'Collector',
             default => 'Visitor',
         };
+    }
+
+    /**
+     * A collector's personal artifact collection (as opposed to
+     * artifacts belonging to a museum they curate).
+     */
+    public function collectedArtifacts(): HasMany
+    {
+        return $this->hasMany(Artifact::class, 'collector_id');
+    }
+
+    /**
+     * Collections this user created as a collector (personal, not museum-linked).
+     */
+    public function collections(): HasMany
+    {
+        return $this->hasMany(Collection::class, 'collector_id');
+    }
+
+    /**
+     * Collections this user has starred/favorited.
+     */
+    public function favoritedCollections(): BelongsToMany
+    {
+        return $this->belongsToMany(Collection::class, 'collection_favorites')
+            ->withTimestamps();
     }
 }

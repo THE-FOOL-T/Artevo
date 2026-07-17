@@ -14,6 +14,16 @@ class Museum extends Model
 {
     use HasFactory, SoftDeletes;
 
+    /**
+     * Museum-level verification (this institution is legitimate) is
+     * distinct from artifact verification (Phase 11, this specific
+     * object is authentic). Only an admin can change this — see
+     * MuseumPolicy::verify and Admin\MuseumVerificationController.
+     */
+    public const VERIFICATION_PENDING = 'pending';
+    public const VERIFICATION_VERIFIED = 'verified';
+    public const VERIFICATION_REJECTED = 'rejected';
+
     protected $fillable = [
         'curator_id',
         'name',
@@ -32,6 +42,7 @@ class Museum extends Model
         'latitude',
         'longitude',
         'featured',
+        'verification_status',
     ];
 
     protected function casts(): array
@@ -42,6 +53,7 @@ class Museum extends Model
             'featured' => 'boolean',
             'latitude' => 'float',
             'longitude' => 'float',
+            'views_count' => 'integer',
         ];
     }
 
@@ -87,6 +99,21 @@ class Museum extends Model
         return $this->hasMany(MuseumContact::class);
     }
 
+    public function artifacts(): HasMany
+    {
+        return $this->hasMany(Artifact::class);
+    }
+
+    public function collections(): HasMany
+    {
+        return $this->hasMany(Collection::class);
+    }
+
+    public function exhibitions(): HasMany
+    {
+        return $this->hasMany(Exhibition::class);
+    }
+
     public function logoUrl(): ?string
     {
         return $this->logo_path ? Storage::url($this->logo_path) : null;
@@ -103,5 +130,54 @@ class Museum extends Model
     public function getRouteKeyName(): string
     {
         return 'slug';
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->verification_status === self::VERIFICATION_VERIFIED;
+    }
+
+    public function isPendingVerification(): bool
+    {
+        return $this->verification_status === self::VERIFICATION_PENDING;
+    }
+
+    public function isRejected(): bool
+    {
+        return $this->verification_status === self::VERIFICATION_REJECTED;
+    }
+
+    public function verificationLabel(): string
+    {
+        return match ($this->verification_status) {
+            self::VERIFICATION_VERIFIED => 'Verified Institution',
+            self::VERIFICATION_REJECTED => 'Verification Rejected',
+            default => 'Verification Pending',
+        };
+    }
+
+    /**
+     * A plain link to Google Maps' directions UI — a lightweight stand-in
+     * for the full interactive map integration coming in Phase 16.
+     */
+    public function directionsUrl(): ?string
+    {
+        if (! $this->latitude || ! $this->longitude) {
+            return null;
+        }
+
+        return "https://www.google.com/maps/dir/?api=1&destination={$this->latitude},{$this->longitude}";
+    }
+
+    /**
+     * Increments the view counter without touching updated_at — a
+     * page view isn't a content change, so it shouldn't look like an
+     * edit in the admin activity log or the "last updated" timestamp.
+     */
+    public function incrementViews(): void
+    {
+        $this->timestamps = false;
+        $this->increment('views_count');
+        $this->timestamps = true;
     }
 }

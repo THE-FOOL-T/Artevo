@@ -40,11 +40,22 @@ class MuseumFactory extends Factory
             'latitude' => $this->faker->latitude(),
             'longitude' => $this->faker->longitude(),
             'featured' => false,
+            'verification_status' => Museum::VERIFICATION_PENDING,
         ];
     }
 
     public function featured(): static
     {
         return $this->state(fn (array $attributes) => ['featured' => true]);
+    }
+
+    public function verified(): static
+    {
+        return $this->state(fn (array $attributes) => ['verification_status' => Museum::VERIFICATION_VERIFIED]);
+    }
+
+    public function rejected(): static
+    {
+        return $this->state(fn (array $attributes) => ['verification_status' => Museum::VERIFICATION_REJECTED]);
     }
 }
