@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Collector;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreCollectionRequest;
-use App\Http\Requests\UpdateCollectionRequest;
+use App\Http\Requests\SaveCollectionRequest;
 use App\Models\Collection;
 use App\Services\ActivityLogger;
 use App\Services\CollectionMediaService;
@@ -41,7 +40,7 @@ class CollectionController extends Controller
         return view('collector.collections.create');
     }
 
-    public function store(StoreCollectionRequest $request): RedirectResponse
+    public function store(SaveCollectionRequest $request): RedirectResponse
     {
         $data = $request->safe()->except('cover_image');
 
@@ -82,7 +81,7 @@ class CollectionController extends Controller
         ]);
     }
 
-    public function update(UpdateCollectionRequest $request, Collection $collection): RedirectResponse
+    public function update(SaveCollectionRequest $request, Collection $collection): RedirectResponse
     {
         $data = $request->safe()->except(['cover_image', 'remove_cover_image']);
 

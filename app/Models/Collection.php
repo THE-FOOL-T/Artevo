@@ -159,7 +159,16 @@ class Collection extends Model
 
     public function coverImageUrl(): ?string
     {
-        return $this->cover_image_path ? Storage::url($this->cover_image_path) : null;
+        if (! $this->cover_image_path) {
+            return null;
+        }
+        if (filter_var($this->cover_image_path, FILTER_VALIDATE_URL) || str_starts_with($this->cover_image_path, 'http://') || str_starts_with($this->cover_image_path, 'https://')) {
+            return $this->cover_image_path;
+        }
+        if (str_starts_with($this->cover_image_path, '/') || str_starts_with($this->cover_image_path, 'images/')) {
+            return asset(ltrim($this->cover_image_path, '/'));
+        }
+        return Storage::url($this->cover_image_path);
     }
 
     /**
