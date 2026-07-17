@@ -2,8 +2,16 @@
 
 namespace Database\Seeders;
 
+use App\Models\Artifact;
+use App\Models\ArtifactCategory;
+use App\Models\ArtifactMaterial;
+use App\Models\Museum;
+use App\Models\MuseumContact;
+use App\Models\MuseumImage;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,28 +23,100 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->seedUser('admin', 'Artevo Admin', 'admin@artevo.test');
-        $this->seedUser('curator', 'Nadia Farouk', 'curator@artevo.test');
-        $this->seedUser('collector', 'Marcus Webb', 'collector@artevo.test');
-        $this->seedUser('visitor', 'Visitor Account', 'visitor@artevo.test');
+        $admin = User::updateOrCreate(
+            ['email' => 'admin@artevo.test'],
+            [
+                'name' => 'Artevo Admin',
+                'email_verified_at' => now(),
+                'password' => Hash::make('password'),
+                'avatar_path' => null,
+                'role' => User::ROLE_ADMIN,
+                'remember_token' => Str::random(10),
+            ]
+        );
 
-        User::factory()->count(2)->curator()->create();
+        $curator = User::updateOrCreate(
+            ['email' => 'curator@artevo.test'],
+            [
+                'name' => 'Nadia Farouk',
+                'email_verified_at' => now(),
+                'password' => Hash::make('password'),
+                'avatar_path' => null,
+                'role' => User::ROLE_CURATOR,
+                'remember_token' => Str::random(10),
+            ]
+        );
+
+        $collector = User::updateOrCreate(
+            ['email' => 'collector@artevo.test'],
+            [
+                'name' => 'Marcus Webb',
+                'email_verified_at' => now(),
+                'password' => Hash::make('password'),
+                'avatar_path' => null,
+                'role' => User::ROLE_COLLECTOR,
+                'remember_token' => Str::random(10),
+            ]
+        );
+
+        $visitor = User::updateOrCreate(
+            ['email' => 'visitor@artevo.test'],
+            [
+                'name' => 'Visitor Account',
+                'email_verified_at' => now(),
+                'password' => Hash::make('password'),
+                'avatar_path' => null,
+                'role' => User::ROLE_VISITOR,
+                'remember_token' => Str::random(10),
+            ]
+        );
+
+        $otherCurators = User::factory()->count(2)->curator()->create();
         User::factory()->count(5)->collector()->create();
         User::factory()->count(5)->visitor()->create();
-    }
 
-    protected function seedUser(string $role, string $name, string $email): void
-    {
-        $user = User::firstOrNew(['email' => $email]);
+        // A handful of sample museums, mostly owned by the fixed demo
+        // curator so /curator/museums always has something to show.
+        $demoMuseums = Museum::factory()
+            ->count(3)
+            ->featured()
+            ->for($curator, 'curator')
+            ->create()
+            ->each(function (Museum $museum) {
+                MuseumImage::factory()->count(3)->for($museum)->create();
+                MuseumContact::factory()->for($museum)->create();
+            });
 
-        $user->fill([
-            'name' => $name,
-            'email' => $email,
-            'password' => $user->exists ? $user->password : bcrypt('password'),
-            'email_verified_at' => $user->email_verified_at ?? now(),
-            'role' => $role,
-        ]);
+        Museum::factory()
+            ->count(2)
+            ->recycle($otherCurators)
+            ->create()
+            ->each(function (Museum $museum) {
+                MuseumImage::factory()->count(2)->for($museum)->create();
+                MuseumContact::factory()->for($museum)->create();
+            });
+              // Artifact lookup tables — Phase 7. Factories pick randomly from
+        // a fixed word list and dedupe on unique name/slug, so calling
+        // these a fixed number of times reliably seeds "one of each."
+        $categories = ArtifactCategory::factory()->count(10)->create();
+        $materials = ArtifactMaterial::factory()->count(12)->create();
 
-        $user->save();
+        // Sample artifacts for the demo curator's first museum...
+        Artifact::factory()
+            ->count(6)
+            ->forMuseum($demoMuseums->first())
+            ->recycle($categories)
+            ->recycle($materials)
+            ->create();
+
+        // ...and for the demo collector's personal collection.
+        Artifact::factory()
+            ->count(4)
+            ->recycle($categories)
+            ->recycle($materials)
+            ->create([
+                'collector_id' => $collector->id,
+                'created_by' => $collector->id,
+            ]);
     }
 }

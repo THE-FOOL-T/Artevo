@@ -9,7 +9,7 @@
 
             <x-tag>Administrator Dashboard</x-tag>
             <h1 style="margin-top: var(--space-4);">Welcome back, {{ $user->name }}</h1>
-            <p style="max-width: 560px;">User accounts are live. Museum, artifact, verification and auction
+            <p style="max-width: 560px;">User accounts, museums, and artifacts are live. Verification and auction
                 metrics surface here as those modules go live.</p>
 
             <div class="grid grid-4" style="margin-top: var(--space-8);">
@@ -29,21 +29,28 @@
 
             <div class="grid grid-4" style="margin-top: var(--space-6);">
                 <x-card data-reveal>
-                    <span class="av-card__eyebrow">Coming in Phase 5–8</span>
-                    <h3>Museums &amp; artifacts</h3>
-                    <p>Total counts and pending approvals.</p>
+                    <span class="av-card__eyebrow">Live</span>
+                    <div class="av-stat-num" style="color: var(--brass-700); font-size: var(--text-3xl);">{{ number_format($totalMuseums) }}</div>
+                    <p style="margin-top: var(--space-2);">Museum{{ $totalMuseums === 1 ? '' : 's' }} on the platform</p>
+                    <a href="{{ route('curator.museums.index') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">View all &rarr;</a>
                 </x-card>
                 <x-card data-reveal data-reveal-delay="1">
+                    <span class="av-card__eyebrow">Live</span>
+                    <div class="av-stat-num" style="color: var(--brass-700); font-size: var(--text-3xl);">{{ number_format($totalArtifacts) }}</div>
+                    <p style="margin-top: var(--space-2);">Artifact{{ $totalArtifacts === 1 ? '' : 's' }} archived</p>
+                    <a href="{{ route('artifacts.index') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">View all &rarr;</a>
+                </x-card>
+                <x-card data-reveal data-reveal-delay="2">
                     <span class="av-card__eyebrow">Coming in Phase 11</span>
                     <h3>Verification queue</h3>
                     <p>Pending and completed verification requests.</p>
                 </x-card>
-                <x-card data-reveal data-reveal-delay="2">
+                <x-card data-reveal data-reveal-delay="3">
                     <span class="av-card__eyebrow">Coming in Phase 13–14</span>
                     <h3>Auctions &amp; revenue</h3>
                     <p>Active auctions and platform revenue.</p>
                 </x-card>
-                <x-card data-reveal data-reveal-delay="3">
+                <x-card data-reveal data-reveal-delay="4">
                     <span class="av-card__eyebrow">Live</span>
                     <h3>Activity log</h3>
                     <p>A searchable feed of platform-wide actions.</p>

@@ -1,9 +1,8 @@
 {{--
     Reusable site navigation.
-    Nav links intentionally list only routes that exist as of Phase 1
-    (Home, About, Contact). Museums / Artifacts / Exhibitions / Auctions
-    links are added to this same component in the phases that build them —
-    never hard-code a link to a route that doesn't exist yet.
+    Exhibitions / Auctions links are added to this same component in the
+    phases that build them — never hard-code a link to a route that
+    doesn't exist yet.
 --}}
 <header class="av-nav" data-nav>
     <div class="container av-nav__inner">
@@ -15,6 +14,8 @@
         <nav aria-label="Primary">
             <ul class="av-nav__links">
                 <li><a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'is-active' : '' }}">Home</a></li>
+                <li><a href="{{ route('museums.index') }}" class="{{ request()->routeIs('museums.*') ? 'is-active' : '' }}">Museums</a></li>
+                <li><a href="{{ route('artifacts.index') }}" class="{{ request()->routeIs('artifacts.*') ? 'is-active' : '' }}">Artifacts</a></li>
                 <li><a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'is-active' : '' }}">About</a></li>
                 <li><a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'is-active' : '' }}">Contact</a></li>
             </ul>
@@ -36,6 +37,12 @@
 
                     <a href="{{ route('dashboard') }}" class="av-dropdown__item">Dashboard</a>
                     <a href="{{ route('profile.edit') }}" class="av-dropdown__item">Profile</a>
+                    @if (auth()->user()->isCurator() || auth()->user()->isAdmin())
+                        <a href="{{ route('curator.museums.index') }}" class="av-dropdown__item">My museums</a>
+                    @endif
+                    @if (auth()->user()->isCollector())
+                        <a href="{{ route('collector.artifacts.index') }}" class="av-dropdown__item">My collection</a>
+                    @endif
                     @if (auth()->user()->isAdmin())
                         <a href="{{ route('admin.users.index') }}" class="av-dropdown__item">Manage users</a>
                         <a href="{{ route('admin.activity-logs.index') }}" class="av-dropdown__item">Activity log</a>
@@ -60,6 +67,8 @@
 
     <div id="mobile-nav-panel" class="av-nav__mobile-panel" data-nav-mobile>
         <a href="{{ route('home') }}">Home</a>
+        <a href="{{ route('museums.index') }}">Museums</a>
+        <a href="{{ route('artifacts.index') }}">Artifacts</a>
         <a href="{{ route('about') }}">About</a>
         <a href="{{ route('contact') }}">Contact</a>
         <hr style="border-color: var(--color-border); width: 100%;">
@@ -70,6 +79,12 @@
             <a href="{{ route('dashboard') }}">Dashboard</a>
             <a href="{{ route('profile.edit') }}">Profile</a>
             <a href="{{ route('notifications.index') }}">Notifications</a>
+            @if (auth()->user()->isCurator() || auth()->user()->isAdmin())
+                <a href="{{ route('curator.museums.index') }}">My museums</a>
+            @endif
+            @if (auth()->user()->isCollector())
+                <a href="{{ route('collector.artifacts.index') }}">My collection</a>
+            @endif
             @if (auth()->user()->isAdmin())
                 <a href="{{ route('admin.users.index') }}">Manage users</a>
                 <a href="{{ route('admin.activity-logs.index') }}">Activity log</a>

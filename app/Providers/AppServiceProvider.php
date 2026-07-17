@@ -2,15 +2,22 @@
 
 namespace App\Providers;
 
+use App\Events\MuseumVerificationStatusChanged;
 use App\Events\UserRoleChanged;
 use App\Listeners\LogEmailVerified;
+use App\Listeners\LogMuseumVerificationChange;
 use App\Listeners\LogPasswordReset;
 use App\Listeners\LogRoleChange;
 use App\Listeners\LogSuccessfulLogin;
 use App\Listeners\LogUserLogout;
 use App\Listeners\LogUserRegistration;
+use App\Listeners\SendMuseumVerificationNotification;
 use App\Listeners\SendRoleChangedNotification;
+use App\Models\Artifact;
+use App\Models\Museum;
 use App\Models\User;
+use App\Policies\ArtifactPolicy;
+use App\Policies\MuseumPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
@@ -18,6 +25,7 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -53,6 +61,8 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(PasswordReset::class, LogPasswordReset::class);
         Event::listen(UserRoleChanged::class, LogRoleChange::class);
         Event::listen(UserRoleChanged::class, SendRoleChangedNotification::class);
+        Event::listen(MuseumVerificationStatusChanged::class, LogMuseumVerificationChange::class);
+        Event::listen(MuseumVerificationStatusChanged::class, SendMuseumVerificationNotification::class);
 
         // Applied everywhere a `Password::defaults()` rule is used
         // (RegisterRequest, ChangePasswordRequest, NewPasswordController).
@@ -63,6 +73,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Gate::policy(User::class, UserPolicy::class);
+        Gate::policy(Museum::class, MuseumPolicy::class);
+        Gate::policy(Artifact::class, ArtifactPolicy::class);
 
         // Simple, role-based decisions that don't need a full Policy.
         // access-analytics/export-reports are consumed by the Analytics/
@@ -72,5 +84,11 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('access-analytics', fn (User $user) => $user->isAdmin());
         Gate::define('export-reports', fn (User $user) => $user->isAdmin());
         Gate::define('view-activity-logs', fn (User $user) => $user->isAdmin());
+
+        // Every existing ->links() call across the app (museums,
+        // artifacts, admin users, activity logs...) picks this up
+        // automatically — no per-view changes needed.
+        Paginator::defaultView('pagination.av');
+        Paginator::defaultSimpleView('pagination.av');
     }
 }
