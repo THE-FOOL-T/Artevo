@@ -32,6 +32,7 @@ class Museum extends Model
         'description',
         'logo_path',
         'cover_image_path',
+        'cover_photo_url',      // external URL fallback (seeded institutions)
         'foundation_year',
         'website',
         'social_links',
@@ -116,12 +117,41 @@ class Museum extends Model
 
     public function logoUrl(): ?string
     {
-        return $this->logo_path ? Storage::url($this->logo_path) : null;
+        if ($this->logo_path) {
+            if (str_starts_with($this->logo_path, '/') || str_starts_with($this->logo_path, 'images/')) {
+                return asset(ltrim($this->logo_path, '/'));
+            }
+            return Storage::url($this->logo_path);
+        }
+
+        // Return null (no logo uploaded) so @if($museum->logoUrl()) is false
+        // and we don't render a placeholder over the cover image.
+        return null;
     }
 
-    public function coverImageUrl(): ?string
+    /**
+     * Returns the best available cover image URL:
+     * 1. An uploaded file via MuseumMediaService (storage URL)
+     * 2. An external photo URL stored in cover_photo_url (seeded institutions)
+     * 3. Default fallback SVG
+     */
+    public function coverImageUrl(): string
     {
-        return $this->cover_image_path ? Storage::url($this->cover_image_path) : null;
+        if ($this->cover_image_path) {
+            if (str_starts_with($this->cover_image_path, '/') || str_starts_with($this->cover_image_path, 'images/')) {
+                return asset(ltrim($this->cover_image_path, '/'));
+            }
+            return Storage::url($this->cover_image_path);
+        }
+
+        if ($this->cover_photo_url) {
+            if (str_starts_with($this->cover_photo_url, '/') || str_starts_with($this->cover_photo_url, 'images/')) {
+                return asset(ltrim($this->cover_photo_url, '/'));
+            }
+            return $this->cover_photo_url;
+        }
+
+        return asset('images/seed/default_cover.svg');
     }
 
     /**

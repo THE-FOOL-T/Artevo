@@ -41,14 +41,16 @@
                     <a href="{{ route('artifacts.index') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">View all &rarr;</a>
                 </x-card>
                 <x-card data-reveal data-reveal-delay="2">
-                    <span class="av-card__eyebrow">Coming in Phase 11</span>
-                    <h3>Verification queue</h3>
-                    <p>Pending and completed verification requests.</p>
+                    <span class="av-card__eyebrow">Live</span>
+                    <div class="av-stat-num" style="color: #d97706; font-size: var(--text-3xl);">{{ $pendingVerifications }}</div>
+                    <p style="margin-top: var(--space-2);">Artifact{{ $pendingVerifications === 1 ? '' : 's' }} awaiting verification</p>
+                    <a href="{{ route('admin.artifact-verifications.index') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">Review queue &rarr;</a>
                 </x-card>
                 <x-card data-reveal data-reveal-delay="3">
-                    <span class="av-card__eyebrow">Coming in Phase 13–14</span>
-                    <h3>Auctions &amp; revenue</h3>
-                    <p>Active auctions and platform revenue.</p>
+                    <span class="av-card__eyebrow">Live</span>
+                    <div class="av-stat-num" style="color: var(--brass-700); font-size: var(--text-3xl);">{{ number_format($activeAuctions) }}</div>
+                    <p style="margin-top: var(--space-2);">Active auction{{ $activeAuctions === 1 ? '' : 's' }}</p>
+                    <a href="{{ route('auctions.index') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">Browse auctions &rarr;</a>
                 </x-card>
                 <x-card data-reveal data-reveal-delay="4">
                     <span class="av-card__eyebrow">Live</span>
@@ -56,6 +58,25 @@
                     <p>A searchable feed of platform-wide actions.</p>
                     <a href="{{ route('admin.activity-logs.index') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">View activity log &rarr;</a>
                 </x-card>
+                <x-card data-reveal data-reveal-delay="5">
+                    <span class="av-card__eyebrow">Live</span>
+                    <div class="av-stat-num" style="color: {{ $pendingDonations > 0 ? '#d97706' : 'var(--brass-700)' }}; font-size: var(--text-3xl);">{{ $pendingDonations }}</div>
+                    <p style="margin-top: var(--space-2);">Donation{{ $pendingDonations === 1 ? '' : 's' }} awaiting review</p>
+                    <a href="{{ route('admin.donations.index') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">Review donations &rarr;</a>
+                </x-card>
+                <x-card data-reveal data-reveal-delay="6">
+                    <span class="av-card__eyebrow">Phase 15</span>
+                    <div class="av-stat-num" style="color: var(--brass-700); font-size: var(--text-3xl);">{{ number_format($totalQrScans) }}</div>
+                    <p style="margin-top: var(--space-2);">QR code scan{{ $totalQrScans === 1 ? '' : 's' }}</p>
+                    <a href="{{ route('admin.qr-codes.index') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">View analytics &rarr;</a>
+                </x-card>
+                <x-card data-reveal data-reveal-delay="7">
+                    <span class="av-card__eyebrow">Phase 16</span>
+                    <div class="av-stat-num" style="color: var(--brass-700); font-size: var(--text-3xl);">{{ number_format($totalCertificates) }}</div>
+                    <p style="margin-top: var(--space-2);">Certificate{{ $totalCertificates === 1 ? '' : 's' }} issued</p>
+                    <a href="{{ route('admin.certificates.index') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">Manage &rarr;</a>
+                </x-card>
+
             </div>
 
             <div class="grid grid-2 mt-8">

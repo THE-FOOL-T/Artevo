@@ -9,8 +9,7 @@
 
             <x-tag>Curator Dashboard</x-tag>
             <h1 style="margin-top: var(--space-4);">Welcome back, {{ $user->name }}</h1>
-            <p style="max-width: 560px;">Manage your museum profiles below. Verification queues and exhibition
-                management will surface here as those modules go live.</p>
+            <p style="max-width: 560px;">Manage your museum profiles, artifacts, collections, and exhibitions below.</p>
 
             <div class="grid grid-4" style="margin-top: var(--space-8);">
                 <x-card data-reveal>
@@ -25,19 +24,34 @@
                     <p style="margin-top: var(--space-2);">Artifact{{ $artifactCount === 1 ? '' : 's' }} across your museums</p>
                 </x-card>
                 <x-card data-reveal data-reveal-delay="2">
-                    <span class="av-card__eyebrow">Coming in Phase 11</span>
-                    <h3>Verification queue</h3>
-                    <p>Artifacts awaiting your review, approval, or rejection.</p>
+                    <span class="av-card__eyebrow">Live</span>
+                    <div class="av-stat-num" style="color: var(--brass-700); font-size: var(--text-3xl);">{{ $collectionCount }}</div>
+                    <p style="margin-top: var(--space-2);">Collection{{ $collectionCount === 1 ? '' : 's' }}</p>
+                    <a href="{{ route('curator.museums.index') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">Manage collections &rarr;</a>
+                </x-card>
+                <x-card data-reveal data-reveal-delay="2">
+                    <span class="av-card__eyebrow">Live</span>
+                    <div class="av-stat-num" style="color: var(--brass-700); font-size: var(--text-3xl);">{{ $auctionCount }}</div>
+                    <p style="margin-top: var(--space-2);">Active auction{{ $auctionCount === 1 ? '' : 's' }}</p>
+                    <a href="{{ route('auctions.index') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">Browse auctions &rarr;</a>
                 </x-card>
                 <x-card data-reveal data-reveal-delay="3">
-                    <span class="av-card__eyebrow">Coming in Phase 10</span>
-                    <h3>Active exhibitions</h3>
-                    <p>Exhibitions you're currently running or building.</p>
+                    <span class="av-card__eyebrow">Live</span>
+                    <div class="av-stat-num" style="color: var(--brass-700); font-size: var(--text-3xl);">{{ $exhibitionCount }}</div>
+                    <p style="margin-top: var(--space-2);">Exhibition{{ $exhibitionCount === 1 ? '' : 's' }}</p>
+                    <a href="{{ route('curator.museums.index') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">Manage exhibitions &rarr;</a>
                 </x-card>
                 <x-card data-reveal data-reveal-delay="4">
-                    <span class="av-card__eyebrow">Coming in Phase 12 &amp; 15</span>
-                    <h3>Curator notes &amp; restoration</h3>
-                    <p>Provenance commentary and restoration record updates.</p>
+                    <span class="av-card__eyebrow">Live</span>
+                    <div class="av-stat-num" style="color: var(--brass-700); font-size: var(--text-3xl);">{{ $restorationCount }}</div>
+                    <p style="margin-top: var(--space-2);">Restoration record{{ $restorationCount === 1 ? '' : 's' }}</p>
+                    <a href="{{ route('curator.museums.index') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">Manage artifacts &rarr;</a>
+                </x-card>
+                <x-card data-reveal data-reveal-delay="5">
+                    <span class="av-card__eyebrow">Live</span>
+                    <div class="av-stat-num" style="color: {{ $pendingDonations > 0 ? '#d97706' : 'var(--brass-700)' }}; font-size: var(--text-3xl);">{{ $pendingDonations }}</div>
+                    <p style="margin-top: var(--space-2);">Donation{{ $pendingDonations === 1 ? '' : 's' }} to your museum{{ $pendingDonations === 1 ? '' : 's' }}</p>
+                    <a href="{{ route('admin.donations.index', ['status' => 'pending']) }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">View donations &rarr;</a>
                 </x-card>
             </div>
 

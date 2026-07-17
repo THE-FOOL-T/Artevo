@@ -4,9 +4,8 @@ namespace App\Services;
 
 use App\Models\Artifact;
 use App\Models\User;
-use App\Notifications\ArtifactSubmittedForVerification;
-use App\Notifications\ArtifactVerificationRejected;
-use App\Notifications\ArtifactVerified;
+use App\Notifications\ArtifactVerificationNotification;
+use App\Services\CertificateService;
 
 class ArtifactVerificationService
 {
@@ -25,7 +24,11 @@ class ArtifactVerificationService
 
         // Notify all admins of the new submission
         User::where('role', 'admin')->each(function (User $admin) use ($artifact, $submittedBy) {
-            $admin->notify(new ArtifactSubmittedForVerification($artifact, $submittedBy));
+            $admin->notify(new ArtifactVerificationNotification(
+                artifact: $artifact,
+                type: 'submitted',
+                submittedBy: $submittedBy
+            ));
         });
     }
 
@@ -44,7 +47,11 @@ class ArtifactVerificationService
 
         // Notify the artifact owner
         $owner = $this->resolveOwner($artifact);
-        $owner?->notify(new ArtifactVerified($artifact, $admin->name));
+        $owner?->notify(new ArtifactVerificationNotification(
+            artifact: $artifact,
+            type: 'verified',
+            verifiedByName: $admin->name
+        ));
     }
 
     /**
@@ -61,7 +68,11 @@ class ArtifactVerificationService
         ]);
 
         $owner = $this->resolveOwner($artifact);
-        $owner?->notify(new ArtifactVerificationRejected($artifact, $note));
+        $owner?->notify(new ArtifactVerificationNotification(
+            artifact: $artifact,
+            type: 'rejected',
+            note: $note
+        ));
     }
 
     /**
