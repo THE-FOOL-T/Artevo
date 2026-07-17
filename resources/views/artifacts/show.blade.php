@@ -178,6 +178,24 @@
                                     🎁 Donate to Museum
                                 </a>
                             @endcan
+
+                            {{-- Favorite / Unfavorite --}}
+                            @if(auth()->user()->favoritedArtifacts()->where('artifact_id', $artifact->id)->exists())
+                                <form method="POST" action="{{ route('artifacts.favorite.destroy', $artifact) }}" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="av-btn av-btn--outline" style="font-size:.82rem; padding: 4px 12px; color: #ef4444; border-color: rgba(239,68,68,.3);">
+                                        ♥ Favorited
+                                    </button>
+                                </form>
+                            @else
+                                <form method="POST" action="{{ route('artifacts.favorite.store', $artifact) }}" style="display:inline;">
+                                    @csrf
+                                    <button class="av-btn av-btn--outline" style="font-size:.82rem; padding: 4px 12px; color: var(--ink-500); border-color: var(--color-border);">
+                                        ♡ Favorite
+                                    </button>
+                                </form>
+                            @endif
                         @endauth
                     </div>
 

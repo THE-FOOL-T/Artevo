@@ -11,10 +11,10 @@
          (Phase 7-9). Nav renders transparent/light-text over this via
          the [data-hero] hook in navigation.js. --}}
     <section class="av-hero" data-hero>
-        <div class="av-hero__slide is-active" style="background-image: url('https://picsum.photos/seed/artevo-artifact-1/1600/900')"></div>
-        <div class="av-hero__slide" style="background-image: url('https://picsum.photos/seed/artevo-artifact-2/1600/900')"></div>
-        <div class="av-hero__slide" style="background-image: url('https://picsum.photos/seed/artevo-artifact-3/1600/900')"></div>
-        <div class="av-hero__slide" style="background-image: url('https://picsum.photos/seed/artevo-artifact-4/1600/900')"></div>
+        <div class="av-hero__slide is-active" style="background-image: url('{{ asset('images/seed/british_museum.jpg') }}')"></div>
+        <div class="av-hero__slide" style="background-image: url('{{ asset('images/seed/louvre_museum.jpg') }}')"></div>
+        <div class="av-hero__slide" style="background-image: url('{{ asset('images/seed/egyptian_museum.jpg') }}')"></div>
+        <div class="av-hero__slide" style="background-image: url('{{ asset('images/seed/met_museum.jpg') }}')"></div>
         <div class="av-hero__overlay"></div>
 
         <div class="av-hero__dots">
@@ -119,15 +119,15 @@
             </x-section-heading>
             <div class="grid grid-3" data-reveal>
                 <div>
-                    <div class="av-stat-num av-counter" data-counter="4210">0</div>
+                    <div class="av-stat-num av-counter" data-counter="{{ $stats['artifacts'] }}">0</div>
                     <div class="av-stat-label">Artifacts archived</div>
                 </div>
                 <div>
-                    <div class="av-stat-num av-counter" data-counter="186">0</div>
-                    <div class="av-stat-label">Partner museums</div>
+                    <div class="av-stat-num av-counter" data-counter="{{ $stats['museums'] }}">0</div>
+                    <div class="av-stat-label">Verified museums</div>
                 </div>
                 <div>
-                    <div class="av-stat-num av-counter" data-counter="97">0</div>
+                    <div class="av-stat-num av-counter" data-counter="{{ $stats['verified'] }}">0</div>
                     <div class="av-stat-label">Verified this month</div>
                 </div>
             </div>
@@ -162,7 +162,86 @@
         </div>
     </section>
 
+    {{-- ===================== FEATURED EXHIBITIONS ======================= --}}
+    @if($featuredExhibitions->isNotEmpty())
+    <section class="av-section av-section--white" style="padding-top: var(--space-8);">
+        <div class="container">
+            <div class="flex" style="align-items:center; justify-content:space-between; margin-bottom:var(--space-6); flex-wrap:wrap; gap:var(--space-3);">
+                <x-section-heading eyebrow="Curated Shows" style="margin:0;">
+                    <h2 style="margin:0;">Featured <em>exhibitions</em></h2>
+                </x-section-heading>
+                <a href="{{ route('exhibitions.index') }}" class="av-btn av-btn--outline" style="font-size:.85rem;">Browse all &rarr;</a>
+            </div>
+            <div class="grid grid-3" style="gap: var(--space-6);">
+                @foreach($featuredExhibitions as $feat)
+                <a href="{{ route('exhibitions.show', $feat) }}" class="av-card" style="display:block; text-decoration:none; position:relative; overflow:hidden; min-height:260px;" data-reveal>
+                    @if($feat->coverImageUrl())
+                        <img src="{{ $feat->coverImageUrl() }}" alt="{{ $feat->name }}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">
+                        <div style="position:absolute; inset:0; background: linear-gradient(to top, rgba(15,12,20,.92) 0%, rgba(15,12,20,.2) 65%, transparent 100%);"></div>
+                    @else
+                        <div style="position:absolute; inset:0; background: linear-gradient(135deg, #1e1428 0%, #2d1f3d 100%);"></div>
+                    @endif
+                    <div style="position:relative; display:flex; flex-direction:column; min-height:260px; padding:var(--space-4);">
+                        <span class="av-tag av-tag--gold" style="align-self:flex-start;">Featured</span>
+                        <div style="margin-top:auto;">
+                            <p style="font-size:.72rem; color:var(--color-gold); font-weight:600; text-transform:uppercase; letter-spacing:.06em; margin-bottom:var(--space-1);">{{ $feat->museum->name }}</p>
+                            <h3 style="color:var(--color-parchment); font-size:1.05rem; margin:0 0 var(--space-1); line-height:1.3;">{{ $feat->name }}</h3>
+                            @if($feat->tagline)
+                                <p style="font-size:.8rem; color:rgba(248,245,239,.65); margin:0;">{{ Str::limit($feat->tagline, 70) }}</p>
+                            @endif
+                            <p style="font-size:.75rem; color:rgba(248,245,239,.5); margin:var(--space-2) 0 0;">🗂 {{ $feat->sections_count }} {{ Str::plural('section', $feat->sections_count) }}</p>
+                        </div>
+                    </div>
+                </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
+    {{-- ======================= FEATURED MUSEUMS ========================= --}}
+    @if($featuredMuseums->isNotEmpty())
+    <section class="av-section" style="background: var(--color-surface-2);">
+        <div class="container">
+            <div class="flex" style="align-items:center; justify-content:space-between; margin-bottom:var(--space-6); flex-wrap:wrap; gap:var(--space-3);">
+                <x-section-heading eyebrow="Partner Institutions" style="margin:0;">
+                    <h2 style="margin:0;">Verified <em>museums</em></h2>
+                </x-section-heading>
+                <a href="{{ route('museums.index') }}" class="av-btn av-btn--outline" style="font-size:.85rem;">Explore directory &rarr;</a>
+            </div>
+            <div class="grid grid-4" style="gap: var(--space-5);">
+                @foreach($featuredMuseums as $museum)
+                <a href="{{ route('museums.show', $museum) }}" class="av-card" style="display:flex; flex-direction:column; text-decoration:none;" data-reveal>
+                    <div style="height:140px; overflow:hidden; background:linear-gradient(135deg,#1e1428,#2d1f3d); border-radius:var(--radius-sm) var(--radius-sm) 0 0; position:relative; flex-shrink:0;">
+                        @if($museum->coverImageUrl())
+                            <img src="{{ $museum->coverImageUrl() }}" alt="{{ $museum->name }}" style="width:100%; height:100%; object-fit:cover; opacity:.7;">
+                        @endif
+                        @if($museum->logoUrl())
+                            <img src="{{ $museum->logoUrl() }}" alt="{{ $museum->name }} logo" style="position:absolute; bottom:var(--space-2); left:var(--space-3); width:36px; height:36px; border-radius:var(--radius-sm); border:2px solid rgba(255,255,255,0.85); object-fit:cover; background:var(--dark); box-shadow:var(--shadow-sm);">
+                        @endif
+                        @if($museum->featured)
+                            <span class="av-tag av-tag--gold" style="position:absolute; top:var(--space-2); right:var(--space-2); font-size:.7rem;">Featured</span>
+                        @endif
+                    </div>
+                    <div style="padding:var(--space-4); flex:1; display:flex; flex-direction:column; gap:var(--space-2);">
+                        <h3 style="font-size:.95rem; margin:0; line-height:1.3;">{{ $museum->name }}</h3>
+                        @if($museum->city)
+                            <p style="font-size:.78rem; color:var(--color-muted); margin:0;">📍 {{ $museum->city }}{{ $museum->country ? ', '.$museum->country : '' }}</p>
+                        @endif
+                        <div class="flex" style="gap:var(--space-3); margin-top:auto; padding-top:var(--space-3); border-top:1px solid var(--color-border); font-size:.75rem; color:var(--color-muted);">
+                            <span>{{ $museum->artifacts_count }} artifact{{ $museum->artifacts_count !== 1 ? 's' : '' }}</span>
+                            <span>{{ $museum->exhibitions_count }} exhibition{{ $museum->exhibitions_count !== 1 ? 's' : '' }}</span>
+                        </div>
+                    </div>
+                </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
     {{-- ============================== CTA =============================== --}}
+
     <section class="av-section" style="background: var(--brass-100);">
         <div class="container text-center">
             <h2>Start preserving <em>history</em> today</h2>

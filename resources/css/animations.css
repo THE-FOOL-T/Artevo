@@ -7,17 +7,23 @@
  */
 
 /* Elements start hidden + offset, then JS (scroll-reveal.js) adds
-   .is-visible via IntersectionObserver as they enter the viewport. */
+   .is-visible via IntersectionObserver as they enter the viewport.
+   The animation fallback ensures elements that are already visible on load
+   (or injected via AJAX without the observer being updated) always become
+   visible after 1.2s max, preventing the "white ghost card" problem. */
 [data-reveal] {
     opacity: 0;
     transform: translateY(24px);
     transition: opacity var(--duration-slow) var(--ease-out),
                 transform var(--duration-slow) var(--ease-out);
+    /* Fallback: auto-reveal after 1.2s so elements never stay invisible */
+    animation: av-reveal-fallback 0.4s ease-out 1.2s forwards;
 }
 
 [data-reveal].is-visible {
     opacity: 1;
     transform: translateY(0);
+    animation: none; /* Cancel fallback once JS has revealed it */
 }
 
 [data-reveal="fade"] {
@@ -29,6 +35,10 @@
 [data-reveal][data-reveal-delay="2"] { transition-delay: 160ms; }
 [data-reveal][data-reveal-delay="3"] { transition-delay: 240ms; }
 [data-reveal][data-reveal-delay="4"] { transition-delay: 320ms; }
+
+@keyframes av-reveal-fallback {
+    to { opacity: 1; transform: translateY(0); }
+}
 
 @keyframes av-fade-in {
     from { opacity: 0; }

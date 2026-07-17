@@ -13,6 +13,8 @@ import { initHeroSlider } from './modules/hero-slider.js';
 import { initDropdown } from './modules/dropdown.js';
 import { initModal } from './modules/modal.js';
 import { initPasswordToggle } from './modules/password-toggle.js';
+import { initArtifactSearch } from './modules/artifact-search.js';
+import { initLightbox } from './modules/lightbox.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     initNavigation();
@@ -23,4 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initDropdown();
     initModal();
     initPasswordToggle();
+    initArtifactSearch();
+    initLightbox();
 });

@@ -33,22 +33,27 @@
     background: transparent;
     border-bottom-color: rgba(237, 231, 216, 0.18);
 }
+
 .av-nav.is-on-dark-hero:not(.is-scrolled) .av-nav__brand,
 .av-nav.is-on-dark-hero:not(.is-scrolled) .av-nav__links a,
 .av-nav.is-on-dark-hero:not(.is-scrolled) .av-nav__toggle {
     color: var(--parchment-100);
 }
+
 .av-nav.is-on-dark-hero:not(.is-scrolled) .av-nav__toggle {
     border-color: rgba(237, 231, 216, 0.4);
 }
+
 .av-nav.is-on-dark-hero:not(.is-scrolled) .av-btn--outline-dark {
     border-color: rgba(237, 231, 216, 0.55);
     color: var(--parchment-100);
 }
+
 .av-nav.is-on-dark-hero:not(.is-scrolled) .av-btn--outline-dark:hover {
     background: rgba(237, 231, 216, 0.12);
     color: var(--white);
 }
+
 .av-nav.is-on-dark-hero:not(.is-scrolled) .av-dropdown__trigger {
     border-color: rgba(237, 231, 216, 0.4);
     color: var(--parchment-100);
@@ -168,10 +173,12 @@
 }
 
 @media (max-width: 860px) {
+
     .av-nav__links,
     .av-nav__actions .av-btn--outline-dark {
         display: none;
     }
+
     .av-nav__toggle {
         display: flex;
     }
@@ -196,10 +203,10 @@
     position: relative;
     overflow: hidden;
     transition: transform var(--duration-fast) var(--ease-out),
-                box-shadow var(--duration-fast) var(--ease-out),
-                background-color var(--duration-fast) var(--ease-out),
-                color var(--duration-fast) var(--ease-out),
-                border-color var(--duration-fast) var(--ease-out);
+        box-shadow var(--duration-fast) var(--ease-out),
+        background-color var(--duration-fast) var(--ease-out),
+        color var(--duration-fast) var(--ease-out),
+        border-color var(--duration-fast) var(--ease-out);
 }
 
 .av-btn:active {
@@ -253,7 +260,9 @@
     color: var(--parchment-100);
 }
 
-.av-btn--block { width: 100%; }
+.av-btn--block {
+    width: 100%;
+}
 
 .av-btn__ripple {
     position: absolute;
@@ -319,8 +328,14 @@
     border-radius: 999px;
     background: var(--porcelain-100);
 }
-.av-tag--pill.av-tag--success { background: var(--green-100); }
-.av-tag--pill.av-tag--danger { background: var(--red-100); }
+
+.av-tag--pill.av-tag--success {
+    background: var(--green-100);
+}
+
+.av-tag--pill.av-tag--danger {
+    background: var(--red-100);
+}
 
 /* ---------------------------------------------------------------------
    Vitrine — museum-case panel with corner brackets. Not used in the hero
@@ -369,8 +384,8 @@
     padding: var(--space-6);
     box-shadow: var(--shadow-sm);
     transition: transform var(--duration-base) var(--ease-out),
-                box-shadow var(--duration-base) var(--ease-out),
-                border-color var(--duration-base) var(--ease-out);
+        box-shadow var(--duration-base) var(--ease-out),
+        border-color var(--duration-base) var(--ease-out);
 }
 
 .av-card:hover {
@@ -379,21 +394,105 @@
     border-color: rgba(169, 129, 46, 0.35);
 }
 
-/* Image-topped variant for artifact/exhibition/museum cards */
+/* ── Grid card image containers ─────────────────────────────────────── */
+
+/* All cards inside a grid row stretch to equal height */
+.grid > .av-card,
+.grid > article {
+    display: flex;
+    flex-direction: column;
+}
+
 .av-card--media {
     padding: 0;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
-.av-card--media__image {
-    width: 100%;
-    height: 190px;
-    object-fit: cover;
+/*
+ * Image wrapper — the first <a> or <div> child of any card in a grid.
+ * Uses aspect-ratio so images are always proportional regardless of source.
+ */
+.grid .av-card > a:first-child,
+.grid .av-card > div:first-child,
+.grid article > a:first-child,
+.av-card--media > a:first-child,
+.av-card--media > div:first-child {
+    display: block !important;
+    width: 100% !important;
+    aspect-ratio: 16 / 10 !important;
+    overflow: hidden !important;
+    position: relative !important;
+    flex-shrink: 0 !important;
+    /* Dark bg so no white flash while image is loading */
+    background: #2a2035 !important;
+    /* Override any inline height so aspect-ratio rules */
+    height: auto !important;
+    min-height: unset !important;
+    max-height: unset !important;
+}
+
+/*
+ * CRITICAL: only target img:first-of-type (the cover image).
+ * Using plain `> img` would also catch logo/badge images inside the same
+ * link and stretch them to full card size — that was the white arch bug.
+ */
+.av-card--media__image,
+.grid .av-card > a:first-child > img:first-of-type,
+.grid .av-card > div:first-child > img:first-of-type,
+.grid article > a:first-child > img:first-of-type,
+.av-card--media > a:first-child > img:first-of-type,
+.av-card--media > div:first-child > img:first-of-type {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    display: block !important;
     transition: transform var(--duration-slow) var(--ease-out);
 }
 
-.av-card--media:hover .av-card--media__image {
+/*
+ * Logo/overlay images inside the card link must NOT be stretched.
+ * Restore their natural sizing so the inline styles take effect.
+ */
+.grid .av-card > a:first-child > img:not(:first-of-type),
+.grid article > a:first-child > img:not(:first-of-type),
+.av-card--media > a:first-child > img:not(:first-of-type) {
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+    display: inline-block !important;
+}
+
+/* Make no-image fallback divs fill the container */
+.grid .av-card > a:first-child > div:first-child,
+.grid article > a:first-child > div:first-child,
+.av-card--media > a:first-child > div:first-child,
+.av-card--media > div:first-child > div:first-child {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Hover zoom on cover image only */
+.av-card:hover .av-card--media__image,
+.grid .av-card:hover > a:first-child > img:first-of-type,
+.grid .av-card:hover > div:first-child > img:first-of-type,
+.grid article:hover > a:first-child > img:first-of-type {
     transform: scale(1.05);
+}
+
+/* Lock logo overlays to their natural small size — never stretch them */
+.museum-logo-overlay,
+img.museum-logo-overlay {
+    position: absolute !important;
+    width: auto !important;
+    height: 28px !important;
+    max-width: 80px !important;
+    object-fit: contain !important;
+    display: inline-block !important;
+    bottom: var(--space-2);
+    right: var(--space-3);
 }
 
 .av-card--media__body {
@@ -451,13 +550,19 @@
     background: var(--color-dark-surface);
     color: var(--color-text-on-dark);
 }
+
 .av-section--dark p,
 .av-section--dark .text-muted {
     color: var(--color-text-on-dark-muted);
 }
-.av-section--dark h1, .av-section--dark h2, .av-section--dark h3, .av-section--dark h4 {
+
+.av-section--dark h1,
+.av-section--dark h2,
+.av-section--dark h3,
+.av-section--dark h4 {
     color: var(--color-text-on-dark);
 }
+
 .av-section--dark em {
     color: var(--brass-100);
 }
@@ -532,7 +637,7 @@
     background: var(--white);
     color: var(--ink-900);
     transition: border-color var(--duration-fast) var(--ease-out),
-                box-shadow var(--duration-fast) var(--ease-out);
+        box-shadow var(--duration-fast) var(--ease-out);
 }
 
 .on-dark .av-field input,
@@ -656,12 +761,24 @@
     animation: av-toast-in var(--duration-base) var(--ease-out);
 }
 
-.av-toast--success { border-color: rgba(31, 77, 61, 0.5); }
-.av-toast--error { border-color: rgba(168, 52, 42, 0.5); }
+.av-toast--success {
+    border-color: rgba(31, 77, 61, 0.5);
+}
+
+.av-toast--error {
+    border-color: rgba(168, 52, 42, 0.5);
+}
 
 @keyframes av-toast-in {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ---------------------------------------------------------------------
@@ -859,8 +976,15 @@
 }
 
 @keyframes av-modal-in {
-    from { opacity: 0; transform: translateY(16px) scale(0.98); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .av-modal__actions {
@@ -884,6 +1008,7 @@
 .av-footer .av-nav__brand-mark {
     color: var(--parchment-100);
 }
+
 .av-footer .av-nav__brand-mark {
     border-color: var(--brass-600);
     color: var(--brass-100);
@@ -956,6 +1081,7 @@
     .av-footer__grid {
         grid-template-columns: 1fr 1fr;
     }
+
     .av-footer__bottom {
         flex-direction: column;
         gap: var(--space-3);
@@ -1036,7 +1162,8 @@
     display: flex;
     align-items: flex-end;
     overflow: hidden;
-    margin-top: -76px; /* sits behind the transparent-on-dark-hero nav */
+    margin-top: -76px;
+    /* sits behind the transparent-on-dark-hero nav */
 }
 
 .av-hero__slide {
@@ -1055,8 +1182,13 @@
 }
 
 @keyframes av-hero-zoom {
-    0% { transform: scale(1); }
-    100% { transform: scale(1.08); }
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(1.08);
+    }
 }
 
 .av-hero__overlay {
@@ -1121,8 +1253,15 @@
 }
 
 @keyframes av-scroll-bob {
-    0%, 100% { transform: translate(-50%, 0); }
-    50% { transform: translate(-50%, 8px); }
+
+    0%,
+    100% {
+        transform: translate(-50%, 0);
+    }
+
+    50% {
+        transform: translate(-50%, 8px);
+    }
 }
 
 /* Entrance animation for hero text, on page load rather than on scroll */
@@ -1131,20 +1270,175 @@
     transform: translateY(18px);
     animation: av-hero-in 900ms var(--ease-out) forwards;
 }
-.av-hero [data-hero-in="1"] { animation-delay: 100ms; }
-.av-hero [data-hero-in="2"] { animation-delay: 220ms; }
-.av-hero [data-hero-in="3"] { animation-delay: 340ms; }
-.av-hero [data-hero-in="4"] { animation-delay: 460ms; }
+
+.av-hero [data-hero-in="1"] {
+    animation-delay: 100ms;
+}
+
+.av-hero [data-hero-in="2"] {
+    animation-delay: 220ms;
+}
+
+.av-hero [data-hero-in="3"] {
+    animation-delay: 340ms;
+}
+
+.av-hero [data-hero-in="4"] {
+    animation-delay: 460ms;
+}
 
 @keyframes av-hero-in {
-    to { opacity: 1; transform: translateY(0); }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @media (max-width: 860px) {
     .av-hero {
         min-height: 520px;
     }
+
     .av-hero__content {
         padding-top: 120px;
     }
+}
+
+/* ---------------------------------------------------------------------
+   Search layout — filter sidebar + results grid (artifact directory)
+--------------------------------------------------------------------- */
+.av-search-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: var(--space-8);
+    align-items: start;
+}
+
+.av-search-sidebar {
+    position: sticky;
+    top: calc(76px + var(--space-5));
+    background: var(--white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+}
+
+.av-search-sidebar .av-field:last-child {
+    margin-bottom: 0;
+}
+
+.av-search-results {
+    min-height: 240px;
+    position: relative;
+}
+
+.av-search-results.is-loading {
+    opacity: 0.5;
+    pointer-events: none;
+    transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+@media (max-width: 900px) {
+    .av-search-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .av-search-sidebar {
+        position: static;
+    }
+}
+
+/* ---------------------------------------------------------------------
+   Lightbox gallery
+--------------------------------------------------------------------- */
+.av-gallery-thumb {
+    cursor: zoom-in;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+}
+
+.av-gallery-thumb img {
+    transition: transform var(--duration-slow) var(--ease-out);
+}
+
+.av-gallery-thumb:hover img {
+    transform: scale(1.08);
+}
+
+.av-lightbox-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(21, 18, 13, 0.92);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-6);
+}
+
+.av-lightbox-backdrop.is-open {
+    display: flex;
+    animation: av-fade-in var(--duration-fast) var(--ease-out);
+}
+
+.av-lightbox__image {
+    max-width: min(90vw, 1100px);
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: var(--radius-sm);
+}
+
+.av-lightbox__close,
+.av-lightbox__prev,
+.av-lightbox__next {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(237, 231, 216, 0.3);
+    color: var(--parchment-100);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.av-lightbox__close:hover,
+.av-lightbox__prev:hover,
+.av-lightbox__next:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.av-lightbox__close {
+    top: var(--space-5);
+    right: var(--space-5);
+}
+
+.av-lightbox__prev {
+    left: var(--space-5);
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.av-lightbox__next {
+    right: var(--space-5);
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.av-lightbox__counter {
+    position: absolute;
+    bottom: var(--space-5);
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--stone-400);
+    font-size: var(--text-sm);
+    font-family: var(--font-mono);
+}
+
+.av-lightbox__download {
+    position: absolute;
+    bottom: var(--space-5);
+    right: var(--space-5);
 }
