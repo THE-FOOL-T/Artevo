@@ -20,7 +20,7 @@
                 <div class="grid grid-3" style="margin-top: var(--space-8);">
                     @foreach ($artifacts as $artifact)
                         <x-card class="av-card--media">
-                            <img src="{{ $artifact->primaryImage()?->url() ?? 'https://picsum.photos/seed/artifact-' . $artifact->id . '/480/300' }}" alt="" class="av-card--media__image">
+                            <img src="{{ $artifact->primaryImageUrl() }}" alt="{{ $artifact->name }}" class="av-card--media__image">
                             <div class="av-card--media__body">
                                 <x-tag variant="{{ $artifact->status === 'public' ? 'success' : 'muted' }}" class="av-tag--pill">{{ ucfirst($artifact->status) }}</x-tag>
                                 <h3 class="mt-4">{{ $artifact->name }}</h3>

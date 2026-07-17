@@ -93,4 +93,32 @@ class ArtifactPolicy
     {
         return $user->isAdmin() || $artifact->isOwnedBy($user);
     }
+
+    // ─── Phase 14 ─────────────────────────────────────────────────────────────
+
+    /**
+     * An artifact owner may submit a donation request when:
+     *  - They own the artifact.
+     *  - There is no active (pending/approved) donation already in progress.
+     *  - The artifact is not in an active auction.
+     */
+    public function donate(User $user, Artifact $artifact): bool
+    {
+        if (! $artifact->isOwnedBy($user) && ! $user->isAdmin()) {
+            return false;
+        }
+
+        // Block if a donation is already in progress
+        if ($artifact->activeDonation !== null) {
+            return false;
+        }
+
+        // Block if an active auction is running
+        if ($artifact->activeAuction !== null && $artifact->activeAuction->isOpen()) {
+            return false;
+        }
+
+        return true;
+    }
 }
+

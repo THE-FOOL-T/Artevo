@@ -7,6 +7,7 @@ use App\Models\Artifact;
 use App\Models\User;
 use App\Services\ActivityLogger;
 use App\Services\ArtifactVerificationService;
+use App\Services\CertificateService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -16,6 +17,7 @@ class ArtifactVerificationController extends Controller
     public function __construct(
         private ArtifactVerificationService $verificationService,
         private ActivityLogger              $activityLogger,
+        private CertificateService          $certificateService,
     ) {}
 
     /**
@@ -58,6 +60,9 @@ class ArtifactVerificationController extends Controller
         ]);
 
         $this->verificationService->verify($artifact, $request->user(), $request->get('note'));
+
+        // Phase 16: Auto-issue Certificate of Authenticity on verification.
+        $this->certificateService->issueVerification($artifact->load('museum.curator', 'collector'), $request->user());
 
         $this->activityLogger->log(
             action: 'artifact.verified',
