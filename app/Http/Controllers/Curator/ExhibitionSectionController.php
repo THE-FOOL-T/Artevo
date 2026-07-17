@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Curator;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreExhibitionSectionRequest;
-use App\Http\Requests\UpdateExhibitionSectionRequest;
+use App\Http\Requests\SaveExhibitionSectionRequest;
 use App\Models\Exhibition;
 use App\Models\ExhibitionSection;
 use App\Services\ExhibitionService;
@@ -19,7 +18,7 @@ class ExhibitionSectionController extends Controller
     /**
      * Add a new section to an exhibition.
      */
-    public function store(StoreExhibitionSectionRequest $request, Exhibition $exhibition): JsonResponse
+    public function store(SaveExhibitionSectionRequest $request, Exhibition $exhibition): JsonResponse
     {
         Gate::authorize('update', $exhibition);
 

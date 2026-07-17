@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Curator;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreExhibitionRequest;
-use App\Http\Requests\UpdateExhibitionRequest;
+use App\Http\Requests\SaveExhibitionRequest;
 use App\Models\Exhibition;
 use App\Models\Museum;
-use App\Notifications\ExhibitionPublished;
+use App\Notifications\ExhibitionNotification;
 use App\Services\ActivityLogger;
 use App\Services\ExhibitionMediaService;
 use App\Services\ExhibitionService;
@@ -48,7 +47,7 @@ class ExhibitionController extends Controller
         ]);
     }
 
-    public function store(StoreExhibitionRequest $request, Museum $museum): RedirectResponse
+    public function store(SaveExhibitionRequest $request, Museum $museum): RedirectResponse
     {
         $data = $request->safe()->except('cover_image');
 
@@ -88,7 +87,7 @@ class ExhibitionController extends Controller
         ]);
     }
 
-    public function update(UpdateExhibitionRequest $request, Museum $museum, Exhibition $exhibition): RedirectResponse
+    public function update(SaveExhibitionRequest $request, Museum $museum, Exhibition $exhibition): RedirectResponse
     {
         $data = $request->safe()->except(['cover_image', 'remove_cover_image']);
 
@@ -140,10 +139,12 @@ class ExhibitionController extends Controller
         $exhibition = $this->exhibitionService->publish($exhibition);
 
         // Notify the creator (in case an admin pressed publish on their behalf)
-        if ($exhibition->creator) {
-            $exhibition->creator->notify(
-                new ExhibitionPublished($exhibition, auth()->user()->name)
-            );
+        if ($exhibition->curator) {
+            $exhibition->curator->notify(new ExhibitionNotification(
+                exhibition: $exhibition,
+                type: 'published',
+                publishedByName: auth()->user()->name
+            ));
         }
 
         $this->activityLogger->log(

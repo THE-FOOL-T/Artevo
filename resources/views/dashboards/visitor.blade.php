@@ -22,6 +22,20 @@
                 </form>
             </x-card>
 
+            <x-card style="margin-top: var(--space-4); background: var(--brass-100); border-color: transparent;">
+                <h3>Museum Staff?</h3>
+                <p>If you work at a museum and want to manage its digital presence, you can apply for a Curator account.</p>
+                @if ($user->curatorApplication?->isPending())
+                    <p style="margin-top: var(--space-3); color: var(--brass-700); font-weight: 500;">
+                        ✓ Your curator application is pending review.
+                    </p>
+                @else
+                    <div style="margin-top: var(--space-3);">
+                        <x-button type="link" href="{{ route('curator-applications.create') }}" variant="dark">Apply to be a Curator</x-button>
+                    </div>
+                @endif
+            </x-card>
+
             <div class="grid grid-3" style="margin-top: var(--space-8);">
                 <x-card data-reveal>
                     <span class="av-card__eyebrow">Account</span>
@@ -30,14 +44,16 @@
                     <a href="{{ route('profile.edit') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">Go to profile &rarr;</a>
                 </x-card>
                 <x-card data-reveal data-reveal-delay="1">
-                    <span class="av-card__eyebrow">Coming in Phase 8–10</span>
-                    <h3>Favorites &amp; saved exhibitions</h3>
-                    <p>Bookmark artifacts and exhibitions to find them again quickly.</p>
+                    <span class="av-card__eyebrow">Saved</span>
+                    <h3>My Favorites</h3>
+                    <p>Artifacts, collections, and exhibitions you have bookmarked.</p>
+                    <a href="{{ route('favorites.index') }}" style="color: var(--brass-700); font-weight: 600; font-size: var(--text-sm);">View favorites &rarr;</a>
                 </x-card>
                 <x-card data-reveal data-reveal-delay="2">
-                    <span class="av-card__eyebrow">Coming in Phase 13–14</span>
-                    <h3>Auctions you're watching</h3>
-                    <p>Track live auctions and see your bid history once you upgrade.</p>
+                    <span class="av-card__eyebrow">Auctions</span>
+                    <h3>Watched Auctions</h3>
+                    <p>Keep track of live auctions you are interested in.</p>
+                    <p style="margin-top: var(--space-2); font-size: var(--text-sm); color: var(--stone-600);">Note: Upgrade to Collector to place bids.</p>
                 </x-card>
             </div>
         </div>
