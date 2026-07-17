@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Events\UserRoleChanged;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\UpdateUserRoleRequest;
+use App\Http\Requests\Admin\SaveUserRoleRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -24,9 +24,9 @@ class UserController extends Controller
 
     /**
      * Change a user's role. Authorization (admin-only, can't change your
-     * own role) is enforced by UpdateUserRoleRequest via UserPolicy.
+     * own role) is enforced by SaveUserRoleRequest via UserPolicy.
      */
-    public function updateRole(UpdateUserRoleRequest $request, User $user): RedirectResponse
+    public function updateRole(SaveUserRoleRequest $request, User $user): RedirectResponse
     {
         $previousRole = $user->role;
         $newRole = $request->validated('role');

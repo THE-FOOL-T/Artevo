@@ -10,11 +10,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The four platform roles. Administrator and Curator are assigned by
@@ -163,5 +164,13 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Collection::class, 'collection_favorites')
             ->withTimestamps();
+    }
+
+    /**
+     * A user's application for the Curator role.
+     */
+    public function curatorApplication(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(CuratorApplication::class, 'user_id');
     }
 }

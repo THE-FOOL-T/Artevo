@@ -52,4 +52,13 @@ class MuseumPolicy
     {
         return $this->update($user, $museum);
     }
+
+    /**
+     * Only an administrator may change a museum's verification status —
+     * a curator verifying their own museum would defeat the point.
+     */
+    public function verify(User $user): bool
+    {
+        return $user->isAdmin();
+    }
 }

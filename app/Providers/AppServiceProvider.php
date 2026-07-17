@@ -14,9 +14,15 @@ use App\Listeners\LogUserRegistration;
 use App\Listeners\SendMuseumVerificationNotification;
 use App\Listeners\SendRoleChangedNotification;
 use App\Models\Artifact;
+use App\Models\Auction;
+use App\Models\Collection;
+use App\Models\Exhibition;
 use App\Models\Museum;
 use App\Models\User;
 use App\Policies\ArtifactPolicy;
+use App\Policies\AuctionPolicy;
+use App\Policies\CollectionPolicy;
+use App\Policies\ExhibitionPolicy;
 use App\Policies\MuseumPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Auth\Events\Login;
@@ -75,6 +81,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(Museum::class, MuseumPolicy::class);
         Gate::policy(Artifact::class, ArtifactPolicy::class);
+        Gate::policy(Auction::class, AuctionPolicy::class);
+        Gate::policy(Collection::class, CollectionPolicy::class);
+        Gate::policy(Exhibition::class, ExhibitionPolicy::class);
 
         // Simple, role-based decisions that don't need a full Policy.
         // access-analytics/export-reports are consumed by the Analytics/
