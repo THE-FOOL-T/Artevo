@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Curator;
+namespace App\Http\Controllers\Collector;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreArtifactRequest;
@@ -8,10 +8,10 @@ use App\Http\Requests\UpdateArtifactRequest;
 use App\Models\Artifact;
 use App\Models\ArtifactCategory;
 use App\Models\ArtifactMaterial;
-use App\Models\Museum;
 use App\Services\ActivityLogger;
 use App\Services\ArtifactService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
@@ -23,38 +23,26 @@ class ArtifactController extends Controller
     ) {
     }
 
-    /**
-     * A museum's artifacts. Gate::authorize('update', $museum) doubles
-     * as "can manage this museum's collection at all" — the same rule
-     * that lets a curator edit the museum profile.
-     */
-    public function index(Museum $museum): View
+    public function index(Request $request): View
     {
-        Gate::authorize('update', $museum);
-
-        return view('curator.artifacts.index', [
-            'museum' => $museum,
-            'artifacts' => $museum->artifacts()->latest()->paginate(12),
+        return view('collector.artifacts.index', [
+            'artifacts' => $request->user()->collectedArtifacts()->latest()->paginate(12),
         ]);
     }
 
-    public function create(Museum $museum): View
+    public function create(): View
     {
-        Gate::authorize('update', $museum);
+        Gate::authorize('create', Artifact::class);
 
-        return view('curator.artifacts.create', [
-            'museum' => $museum,
+        return view('collector.artifacts.create', [
             'categories' => ArtifactCategory::orderBy('name')->get(),
             'materials' => ArtifactMaterial::orderBy('name')->get(),
         ]);
     }
 
-    public function store(StoreArtifactRequest $request, Museum $museum): RedirectResponse
+    public function store(StoreArtifactRequest $request): RedirectResponse
     {
-        Gate::authorize('update', $museum);
-
-        $artifact = $this->artifactService->createForMuseum(
-            $museum,
+        $artifact = $this->artifactService->createForCollector(
             $request->user(),
             $request->safe()->except('tags'),
             $request->validated('tags', []),
@@ -62,28 +50,27 @@ class ArtifactController extends Controller
 
         $this->activityLogger->log(
             action: 'artifact.created',
-            description: "{$request->user()->name} added the artifact \"{$artifact->name}\" to \"{$museum->name}\".",
+            description: "{$request->user()->name} added the artifact \"{$artifact->name}\" to their collection.",
             subject: $artifact,
             user: $request->user(),
         );
 
-        return redirect()->route('curator.museums.artifacts.edit', [$museum, $artifact])
+        return redirect()->route('collector.artifacts.edit', $artifact)
             ->with('success', 'Artifact created. Add images and documents below.');
     }
 
-    public function edit(Museum $museum, Artifact $artifact): View
+    public function edit(Artifact $artifact): View
     {
         Gate::authorize('update', $artifact);
 
-        return view('curator.artifacts.edit', [
-            'museum' => $museum,
-            'artifact' => $artifact->load(['images', 'documents', 'tags', 'provenance', 'curatorNotes.author', 'restorationRecords']),
+        return view('collector.artifacts.edit', [
+            'artifact' => $artifact->load(['images', 'documents', 'tags']),
             'categories' => ArtifactCategory::orderBy('name')->get(),
             'materials' => ArtifactMaterial::orderBy('name')->get(),
         ]);
     }
 
-    public function update(UpdateArtifactRequest $request, Museum $museum, Artifact $artifact): RedirectResponse
+    public function update(UpdateArtifactRequest $request, Artifact $artifact): RedirectResponse
     {
         $this->artifactService->update(
             $artifact,
@@ -101,7 +88,7 @@ class ArtifactController extends Controller
         return back()->with('success', 'Artifact updated.');
     }
 
-    public function destroy(Museum $museum, Artifact $artifact): RedirectResponse
+    public function destroy(Request $request, Artifact $artifact): RedirectResponse
     {
         Gate::authorize('delete', $artifact);
 
@@ -110,10 +97,10 @@ class ArtifactController extends Controller
 
         $this->activityLogger->log(
             action: 'artifact.deleted',
-            description: auth()->user()->name . " deleted the artifact \"{$name}\" from \"{$museum->name}\".",
-            user: auth()->user(),
+            description: "{$request->user()->name} deleted the artifact \"{$name}\" from their collection.",
+            user: $request->user(),
         );
 
-        return redirect()->route('curator.museums.artifacts.index', $museum)->with('success', "\"{$name}\" was deleted.");
+        return redirect()->route('collector.artifacts.index')->with('success', "\"{$name}\" was deleted.");
     }
 }
