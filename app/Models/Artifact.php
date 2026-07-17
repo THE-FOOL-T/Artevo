@@ -62,13 +62,23 @@ class Artifact extends Model
         'verified_by',
         'verified_at',
         'verification_note',
+        // Phase 15
+        'origin_latitude',
+        'origin_longitude',
+        'discovery_latitude',
+        'discovery_longitude',
     ];
 
     protected function casts(): array
     {
         return [
-            'estimated_value' => 'decimal:2',
-            'verified_at'     => 'datetime',
+            'estimated_value'    => 'decimal:2',
+            'verified_at'        => 'datetime',
+            // Phase 15 — map coordinates
+            'origin_latitude'    => 'float',
+            'origin_longitude'   => 'float',
+            'discovery_latitude' => 'float',
+            'discovery_longitude'=> 'float',
         ];
     }
 
@@ -208,9 +218,102 @@ class Artifact extends Model
         return $this->hasMany(RestorationRecord::class)->orderBy('sort_order');
     }
 
+    /**
+     * The single auction for this artifact (Phase 14).
+     * One artifact can only have one live (non-cancelled) auction at a time.
+     */
+    public function auction(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Auction::class)->latestOfMany();
+    }
+
+    /**
+     * The currently open (active + in time window) auction, if any.
+     */
+    public function activeAuction(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Auction::class)->where('status', Auction::STATUS_ACTIVE);
+    }
+
+    /**
+     * All donation requests for this artifact (Phase 14).
+     */
+    public function donations(): HasMany
+    {
+        return $this->hasMany(Donation::class)->orderByDesc('created_at');
+    }
+
+    /**
+     * The current active (pending or approved) donation, if any.
+     */
+    public function activeDonation(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Donation::class)
+            ->whereIn('status', [Donation::STATUS_PENDING, Donation::STATUS_APPROVED]);
+    }
+
+    /**
+     * Phase 15 — QR code record for this artifact.
+     */
+    public function qrCode(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(ArtifactQrCode::class);
+    }
+
+    // ─── Phase 15: coordinate helpers ────────────────────────────────────────
+
+    public function hasOriginCoordinates(): bool
+    {
+        return $this->origin_latitude !== null && $this->origin_longitude !== null;
+    }
+
+    public function hasDiscoveryCoordinates(): bool
+    {
+        return $this->discovery_latitude !== null && $this->discovery_longitude !== null;
+    }
+
+    /**
+     * Returns the existing QR code record, creating one if it doesn't exist.
+     * Safe to call repeatedly — idempotent.
+     */
+    public function ensureQrCode(): ArtifactQrCode
+    {
+        return $this->qrCode ?? ArtifactQrCode::create([
+            'artifact_id' => $this->id,
+            'token'       => \Illuminate\Support\Str::uuid()->toString(),
+            'generation'  => 1,
+        ]);
+    }
+
     public function primaryImage(): ?ArtifactImage
     {
         return $this->images->firstWhere('is_primary', true) ?? $this->images->first();
+    }
+
+    public function primaryImageUrl(): string
+    {
+        if ($img = $this->primaryImage()) {
+            return $img->url();
+        }
+        return asset('images/seed/default_artifact.svg');
+    }
+
+    // ─── Phase 16: Certificates ───────────────────────────────────────────────
+
+    public function certificates(): HasMany
+    {
+        return $this->hasMany(\App\Models\Certificate::class);
+    }
+
+    /**
+     * The active (non-revoked) verification certificate, if any.
+     */
+    public function activeCertificate(): ?\App\Models\Certificate
+    {
+        return $this->certificates
+            ->where('type', \App\Models\Certificate::TYPE_VERIFICATION)
+            ->where('revoked_at', null)
+            ->first();
     }
 
     /**

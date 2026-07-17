@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreArtifactDocumentRequest;
+use App\Http\Requests\SaveArtifactDocumentRequest;
 use App\Models\Artifact;
 use App\Models\ArtifactDocument;
 use App\Services\ArtifactMediaService;
@@ -16,7 +16,7 @@ class ArtifactDocumentController extends Controller
     {
     }
 
-    public function store(StoreArtifactDocumentRequest $request, Artifact $artifact): RedirectResponse
+    public function store(SaveArtifactDocumentRequest $request, Artifact $artifact): RedirectResponse
     {
         $this->mediaService->addDocument(
             $artifact,

@@ -25,6 +25,12 @@ class ArtifactImage extends Model
 
     public function url(): string
     {
+        if (filter_var($this->image_path, FILTER_VALIDATE_URL) || str_starts_with($this->image_path, 'http://') || str_starts_with($this->image_path, 'https://')) {
+            return $this->image_path;
+        }
+        if (str_starts_with($this->image_path, '/') || str_starts_with($this->image_path, 'images/')) {
+            return asset(ltrim($this->image_path, '/'));
+        }
         return Storage::url($this->image_path);
     }
 }

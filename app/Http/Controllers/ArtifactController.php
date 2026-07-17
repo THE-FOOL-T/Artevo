@@ -30,11 +30,11 @@ class ArtifactController extends Controller
 
         return view('artifacts.index', [
             'artifacts' => $artifacts,
-            'categories' => ArtifactCategory::orderBy('name')->get(),
-            'materials' => ArtifactMaterial::orderBy('name')->get(),
-            'civilizations' => Artifact::query()->public()->whereNotNull('civilization')->distinct()->orderBy('civilization')->pluck('civilization'),
-            'countries' => Artifact::query()->public()->whereNotNull('country_of_origin')->distinct()->orderBy('country_of_origin')->pluck('country_of_origin'),
-            'museums' => Museum::query()->whereHas('artifacts', fn ($q) => $q->public())->orderBy('name')->get(),
+            'categories' => \Illuminate\Support\Facades\Cache::remember('public_artifact_categories', 86400, fn () => ArtifactCategory::orderBy('name')->get()),
+            'materials' => \Illuminate\Support\Facades\Cache::remember('public_artifact_materials', 86400, fn () => ArtifactMaterial::orderBy('name')->get()),
+            'civilizations' => \Illuminate\Support\Facades\Cache::remember('public_artifact_civilizations', 86400, fn () => Artifact::query()->public()->whereNotNull('civilization')->distinct()->orderBy('civilization')->pluck('civilization')),
+            'countries' => \Illuminate\Support\Facades\Cache::remember('public_artifact_countries', 86400, fn () => Artifact::query()->public()->whereNotNull('country_of_origin')->distinct()->orderBy('country_of_origin')->pluck('country_of_origin')),
+            'museums' => \Illuminate\Support\Facades\Cache::remember('public_artifact_museums', 86400, fn () => Museum::query()->whereHas('artifacts', fn ($q) => $q->public())->orderBy('name')->get()),
         ]);
     }
 
@@ -60,9 +60,9 @@ class ArtifactController extends Controller
             ->when($request->filled('civilization'), fn ($query) => $query->where('civilization', $request->string('civilization')))
             ->when($request->filled('country'), fn ($query) => $query->where('country_of_origin', $request->string('country')))
             ->when($request->filled('museum'), fn ($query) => $query->where('museum_id', $request->integer('museum')))
-            ->when($request->string('sort') === 'name', fn ($query) => $query->orderBy('name'))
-            ->when($request->string('sort') === 'value', fn ($query) => $query->orderByDesc('estimated_value'))
-            ->when(! $request->filled('sort') || $request->string('sort') === 'newest', fn ($query) => $query->latest());
+            ->when($request->input('sort') === 'name', fn ($query) => $query->orderBy('name'))
+            ->when($request->input('sort') === 'value', fn ($query) => $query->orderByDesc('estimated_value'))
+            ->when(! $request->filled('sort') || $request->input('sort') === 'newest', fn ($query) => $query->latest());
     }
 
     /**
@@ -76,7 +76,8 @@ class ArtifactController extends Controller
     {
         Gate::authorize('view', $artifact);
 
-        $artifact->load(['images', 'documents', 'tags', 'category', 'material', 'museum', 'collector', 'provenance.recorder', 'restorationRecords', 'activeAuction']);
+        $artifact->load(['images', 'documents', 'tags', 'category', 'material', 'museum', 'collector', 'provenance.recorder', 'restorationRecords', 'activeAuction', 'qrCode', 'certificates']);
+
 
         return view('artifacts.show', [
             'artifact' => $artifact,

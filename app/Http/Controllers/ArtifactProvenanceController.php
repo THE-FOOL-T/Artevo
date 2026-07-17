@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreArtifactProvenanceRequest;
-use App\Http\Requests\UpdateArtifactProvenanceRequest;
+use App\Http\Requests\SaveArtifactProvenanceRequest;
 use App\Models\Artifact;
 use App\Models\ArtifactProvenance;
 use App\Services\ActivityLogger;
@@ -19,7 +18,7 @@ class ArtifactProvenanceController extends Controller
         private ActivityLogger            $activityLogger,
     ) {}
 
-    public function store(StoreArtifactProvenanceRequest $request, Artifact $artifact): JsonResponse
+    public function store(SaveArtifactProvenanceRequest $request, Artifact $artifact): JsonResponse
     {
         Gate::authorize('manageProvenance', $artifact);
 
@@ -38,7 +37,7 @@ class ArtifactProvenanceController extends Controller
         ]);
     }
 
-    public function update(UpdateArtifactProvenanceRequest $request, Artifact $artifact, ArtifactProvenance $provenance): JsonResponse
+    public function update(SaveArtifactProvenanceRequest $request, Artifact $artifact, ArtifactProvenance $provenance): JsonResponse
     {
         Gate::authorize('manageProvenance', $artifact);
 

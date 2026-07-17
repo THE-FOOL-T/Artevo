@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreArtifactImageRequest;
+use App\Http\Requests\SaveArtifactImageRequest;
 use App\Models\Artifact;
 use App\Models\ArtifactImage;
 use App\Services\ArtifactMediaService;
@@ -16,7 +16,7 @@ class ArtifactImageController extends Controller
     {
     }
 
-    public function store(StoreArtifactImageRequest $request, Artifact $artifact): RedirectResponse
+    public function store(SaveArtifactImageRequest $request, Artifact $artifact): RedirectResponse
     {
         $this->mediaService->addImages($artifact, $request->file('images'), $request->validated('caption'));
 
