@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Curator;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Curator\StoreMuseumContactRequest;
+use App\Http\Requests\Curator\SaveMuseumContactRequest;
 use App\Models\Museum;
 use App\Models\MuseumContact;
 use Illuminate\Http\RedirectResponse;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Gate;
 
 class MuseumContactController extends Controller
 {
-    public function store(StoreMuseumContactRequest $request, Museum $museum): RedirectResponse
+    public function store(SaveMuseumContactRequest $request, Museum $museum): RedirectResponse
     {
         $museum->contacts()->create($request->validated());
 

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Curator;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Curator\StoreMuseumImageRequest;
+use App\Http\Requests\Curator\SaveMuseumImageRequest;
 use App\Models\Museum;
 use App\Models\MuseumImage;
 use App\Services\MuseumMediaService;
@@ -17,7 +17,7 @@ class MuseumImageController extends Controller
     {
     }
 
-    public function store(StoreMuseumImageRequest $request, Museum $museum): RedirectResponse
+    public function store(SaveMuseumImageRequest $request, Museum $museum): RedirectResponse
     {
         $this->mediaService->addGalleryImages($museum, $request->file('images'), $request->validated('caption'));
 

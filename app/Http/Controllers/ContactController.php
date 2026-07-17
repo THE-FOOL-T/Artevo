@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreContactMessageRequest;
+use App\Http\Requests\SaveContactMessageRequest;
 use App\Models\ContactMessage;
 use App\Services\ContactService;
 use Illuminate\Http\RedirectResponse;
@@ -26,7 +26,7 @@ class ContactController extends Controller
         ]);
     }
 
-    public function store(StoreContactMessageRequest $request): RedirectResponse
+    public function store(SaveContactMessageRequest $request): RedirectResponse
     {
         $this->contactService->submit($request->validated(), $request);
 

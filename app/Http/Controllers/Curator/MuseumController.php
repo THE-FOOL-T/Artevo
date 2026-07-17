@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Curator;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Curator\StoreMuseumRequest;
-use App\Http\Requests\Curator\UpdateMuseumRequest;
+use App\Http\Requests\Curator\SaveMuseumRequest;
 use App\Models\Museum;
 use App\Services\ActivityLogger;
 use App\Services\MuseumMediaService;
@@ -42,7 +41,7 @@ class MuseumController extends Controller
         return view('curator.museums.create');
     }
 
-    public function store(StoreMuseumRequest $request): RedirectResponse
+    public function store(SaveMuseumRequest $request): RedirectResponse
     {
         $museum = new Museum($request->safe()->except(['logo', 'cover_image', 'featured']));
         $museum->curator_id = $request->user()->id;
@@ -98,7 +97,7 @@ class MuseumController extends Controller
         ]);
     }
 
-    public function update(UpdateMuseumRequest $request, Museum $museum): RedirectResponse
+    public function update(SaveMuseumRequest $request, Museum $museum): RedirectResponse
     {
         $museum->fill($request->safe()->except(['logo', 'cover_image', 'featured']));
 

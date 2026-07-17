@@ -136,6 +136,9 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/reports/{type}/export', [ReportController::class, 'export'])->name('reports.export');
+
+    Route::get('/curator-applications', [\App\Http\Controllers\Admin\CuratorApplicationController::class, 'index'])->name('curator-applications.index');
+    Route::patch('/curator-applications/{application}', [\App\Http\Controllers\Admin\CuratorApplicationController::class, 'update'])->name('curator-applications.update');
 });
 
 /*
@@ -280,6 +283,21 @@ Route::middleware(['auth', 'verified'])
 
 /*
 |--------------------------------------------------------------------------
+| Favorites Dashboard & Toggles
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/favorites', [\App\Http\Controllers\FavoriteController::class, 'index'])->name('favorites.index');
+    
+    Route::post('/artifacts/{artifact}/favorite', [\App\Http\Controllers\ArtifactFavoriteController::class, 'store'])->name('artifacts.favorite.store');
+    Route::delete('/artifacts/{artifact}/favorite', [\App\Http\Controllers\ArtifactFavoriteController::class, 'destroy'])->name('artifacts.favorite.destroy');
+    
+    Route::post('/exhibitions/{exhibition}/favorite', [\App\Http\Controllers\ExhibitionFavoriteController::class, 'store'])->name('exhibitions.favorite.store');
+    Route::delete('/exhibitions/{exhibition}/favorite', [\App\Http\Controllers\ExhibitionFavoriteController::class, 'destroy'])->name('exhibitions.favorite.destroy');
+});
+
+/*
+|--------------------------------------------------------------------------
 | Exhibitions — Phase 10
 |--------------------------------------------------------------------------
 */
@@ -397,6 +415,13 @@ Route::prefix('auctions')->name('auctions.')->group(function () {
     Route::post('/{auction}/bid', [AuctionController::class, 'bid'])
         ->middleware(['auth', 'verified'])
         ->name('bid');
+        
+    Route::post('/{auction}/watch', [\App\Http\Controllers\AuctionWatcherController::class, 'store'])
+        ->middleware(['auth', 'verified'])
+        ->name('watch.store');
+    Route::delete('/{auction}/watch', [\App\Http\Controllers\AuctionWatcherController::class, 'destroy'])
+        ->middleware(['auth', 'verified'])
+        ->name('watch.destroy');
 });
 
 // Curator auction management (within museum/artifact context)
@@ -437,6 +462,9 @@ Route::middleware(['auth', 'verified', 'collector'])
         Route::patch('auctions/{auction}/publish',  [CollectorAuctionController::class, 'publish'])->name('auctions.publish');
         Route::patch('auctions/{auction}/close',    [CollectorAuctionController::class, 'close'])->name('auctions.close');
         Route::delete('auctions/{auction}',         [CollectorAuctionController::class, 'cancel'])->name('auctions.cancel');
+
+        Route::get('auctions/watchlist', [CollectorAuctionController::class, 'watchlist'])->name('auctions.watchlist');
+        Route::get('auctions/bids', [CollectorAuctionController::class, 'bids'])->name('auctions.bids');
     });
 
 /*

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UpdateProfileRequest;
+use App\Http\Requests\SaveProfileRequest;
 use App\Services\ActivityLogger;
 use App\Services\AvatarService;
 use Illuminate\Http\RedirectResponse;
@@ -30,7 +30,7 @@ class ProfileController extends Controller
      * avatar). Changing the email address resets email_verified_at so
      * the new address goes through verification again.
      */
-    public function update(UpdateProfileRequest $request): RedirectResponse
+    public function update(SaveProfileRequest $request): RedirectResponse
     {
         $user = $request->user();
         $data = $request->safe()->only(['name', 'email']);
