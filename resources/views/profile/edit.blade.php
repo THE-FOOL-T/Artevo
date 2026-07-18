@@ -19,6 +19,10 @@
                 </x-card>
 
                 <x-card class="mt-6">
+                    @include('profile.partials.manage-api-tokens-form')
+                </x-card>
+
+                <x-card class="mt-6">
                     @include('profile.partials.delete-account-form')
                 </x-card>
             </div>
