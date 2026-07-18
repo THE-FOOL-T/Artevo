@@ -106,7 +106,7 @@ class Collection extends Model
     public function favoritedBy(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'collection_favorites')
-            ->withTimestamps();
+            ->withPivot('created_at');
     }
 
     // -------------------------------------------------------------------------

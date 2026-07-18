@@ -78,7 +78,7 @@ class ActivityLogTest extends TestCase
 
         $this->actingAs($user)->delete(route('profile.destroy'), ['password' => 'Password123']);
 
-        $this->assertDatabaseHas('activity_logs', ['user_id' => $userId, 'action' => 'user.account-deleted']);
+        $this->assertDatabaseHas('activity_logs', ['user_id' => null, 'action' => 'user.account-deleted']);
         $this->assertDatabaseMissing('users', ['id' => $userId]);
     }
 

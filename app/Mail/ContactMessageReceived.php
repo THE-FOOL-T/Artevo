@@ -10,8 +10,7 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Notifies the Artevo support inbox of a new contact form submission.
- * Implements ShouldQueue so sending never blocks the visitor's request —
- * see QUEUE_CONNECTION=database in .env and `php artisan queue:work`.
+
  */
 class ContactMessageReceived extends Mailable implements ShouldQueue
 {

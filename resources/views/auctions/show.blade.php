@@ -54,7 +54,7 @@
             @endauth
         </div>
 
-        <h1 style="font-size:clamp(1.6rem,4vw,2.8rem); color:var(--color-parchment); margin:0 0 var(--space-2); line-height:1.15;">{{ $auction->title }}</h1>
+        <h1 style="font-size:clamp(1.6rem,4vw,2.8rem); color:var(--parchment-100); margin:0 0 var(--space-2); line-height:1.15;">{{ $auction->title }}</h1>
         @if($auction->artifact)
             <p style="color:rgba(248,245,239,.65); font-size:.9rem; margin:0;">
                 <a href="{{ route('artifacts.show', $auction->artifact) }}" style="color:inherit; text-decoration:underline; text-underline-offset:3px;">{{ $auction->artifact->name }}</a>

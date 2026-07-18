@@ -422,6 +422,14 @@ Route::prefix('auctions')->name('auctions.')->group(function () {
     Route::delete('/{auction}/watch', [\App\Http\Controllers\AuctionWatcherController::class, 'destroy'])
         ->middleware(['auth', 'verified'])
         ->name('watch.destroy');
+        
+    Route::get('/watchlist', [\App\Http\Controllers\Collector\AuctionController::class, 'watchlist'])
+        ->middleware(['auth', 'verified'])
+        ->name('watchlist');
+        
+    Route::get('/bids', [\App\Http\Controllers\Collector\AuctionController::class, 'bids'])
+        ->middleware(['auth', 'verified'])
+        ->name('bids');
 });
 
 // Curator auction management (within museum/artifact context)
@@ -462,9 +470,6 @@ Route::middleware(['auth', 'verified', 'collector'])
         Route::patch('auctions/{auction}/publish',  [CollectorAuctionController::class, 'publish'])->name('auctions.publish');
         Route::patch('auctions/{auction}/close',    [CollectorAuctionController::class, 'close'])->name('auctions.close');
         Route::delete('auctions/{auction}',         [CollectorAuctionController::class, 'cancel'])->name('auctions.cancel');
-
-        Route::get('auctions/watchlist', [CollectorAuctionController::class, 'watchlist'])->name('auctions.watchlist');
-        Route::get('auctions/bids', [CollectorAuctionController::class, 'bids'])->name('auctions.bids');
     });
 
 /*

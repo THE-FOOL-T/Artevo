@@ -21,7 +21,7 @@
                 <div class="grid grid-3" style="margin-top: var(--space-8);">
                     @foreach ($museums as $museum)
                         <x-card class="av-card--media">
-                            <img src="{{ $museum->coverImageUrl() ?? 'https://picsum.photos/seed/museum-' . $museum->id . '/480/300' }}" alt="" class="av-card--media__image">
+                            <img src="{{ $museum->coverImageUrl() }}" alt="{{ $museum->name }}" class="av-card--media__image">
                             <div class="av-card--media__body">
                                 @if ($museum->featured)
                                     <x-tag variant="success" class="av-tag--pill">Featured</x-tag>

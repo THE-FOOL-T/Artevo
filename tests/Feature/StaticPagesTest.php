@@ -57,6 +57,6 @@ class StaticPagesTest extends TestCase
         $response = $this->get('/this-page-does-not-exist');
 
         $response->assertNotFound();
-        $response->assertSee("isn't in the collection");
+        $response->assertSee("isn't in the collection", false);
     }
 }

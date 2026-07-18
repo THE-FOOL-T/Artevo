@@ -9,10 +9,7 @@ use Illuminate\Support\Facades\Mail;
 
 /**
  * Handles everything that happens after a visitor submits the Contact
- * page form: persisting the inquiry and notifying the Artevo support
- * inbox. Kept separate from the controller so richer routing logic
- * (e.g. auto-assigning museum inquiries to a curator) can be added here
- * in a later phase without touching HTTP concerns.
+
  */
 class ContactService
 {

@@ -94,16 +94,88 @@
 </div>
 <div class="grid grid-2" style="gap: var(--space-4);">
     <div class="av-field">
-        <label for="latitude">Latitude <span class="text-muted">(optional — powers the map in a later phase)</span></label>
-        <input type="text" id="latitude" name="latitude" value="{{ old('latitude', $museum->latitude ?? '') }}">
+        <label for="latitude">Latitude <span class="text-muted">(powers the map)</span></label>
+        <input type="text" id="latitude" name="latitude" value="{{ old('latitude', $museum->latitude ?? '') }}" placeholder="e.g. 30.0478" autocomplete="off">
         @error('latitude') <span class="av-field__error">{{ $message }}</span> @enderror
     </div>
     <div class="av-field">
         <label for="longitude">Longitude</label>
-        <input type="text" id="longitude" name="longitude" value="{{ old('longitude', $museum->longitude ?? '') }}">
+        <input type="text" id="longitude" name="longitude" value="{{ old('longitude', $museum->longitude ?? '') }}" placeholder="e.g. 31.2336" autocomplete="off">
         @error('longitude') <span class="av-field__error">{{ $message }}</span> @enderror
     </div>
 </div>
+
+{{-- Nominatim Geocoding Button --}}
+<div id="geocode-panel" style="margin-top: var(--space-2);">
+    <button type="button" id="geocode-btn"
+        data-url="{{ url('/api/geocode') }}"
+        style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.5rem 1rem; background:var(--ink-900); color:#fff; border:none; border-radius:var(--radius-sm); cursor:pointer; font-size:var(--text-sm); font-weight:600; transition:opacity .2s;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="11" r="3"/><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+        Auto-detect coordinates from address
+    </button>
+    <span id="geocode-status" style="margin-left:var(--space-3); font-size:var(--text-sm); color:var(--ink-600);"></span>
+</div>
+
+<script>
+(function () {
+    const btn    = document.getElementById('geocode-btn');
+    const status = document.getElementById('geocode-status');
+    const latEl  = document.getElementById('latitude');
+    const lngEl  = document.getElementById('longitude');
+
+    if (!btn) return;
+
+    btn.addEventListener('click', function () {
+        const address = [
+            document.getElementById('address')?.value,
+            document.getElementById('city')?.value,
+            document.getElementById('country')?.value,
+        ].filter(Boolean).join(', ');
+
+        if (!address.trim()) {
+            status.textContent = '⚠ Fill in the address, city or country first.';
+            status.style.color = 'var(--amber-700)';
+            return;
+        }
+
+        btn.disabled = true;
+        btn.style.opacity = '0.6';
+        status.textContent = 'Searching…';
+        status.style.color = 'var(--ink-600)';
+
+        const geocodeUrl = btn.dataset.url;
+        fetch(`${geocodeUrl}?address=${encodeURIComponent(address)}`, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.error) {
+                status.textContent = '✗ ' + data.error;
+                status.style.color = 'var(--red-600)';
+            } else {
+                latEl.value = data.lat;
+                lngEl.value = data.lng;
+                status.innerHTML = `✓ Found: <em style="color:var(--ink-900)">${data.display_name.slice(0, 80)}…</em>`;
+                status.style.color = 'var(--green-700)';
+                // Highlight the fields briefly
+                [latEl, lngEl].forEach(el => {
+                    el.style.borderColor = 'var(--green-500)';
+                    setTimeout(() => el.style.borderColor = '', 2000);
+                });
+            }
+        })
+        .catch(() => {
+            status.textContent = '✗ Network error, please try again.';
+            status.style.color = 'var(--red-600)';
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+        });
+    });
+})();
+</script>
+
 
 @if (auth()->user()->isAdmin())
     <div class="av-field" style="display: flex; align-items: center; gap: var(--space-2);">

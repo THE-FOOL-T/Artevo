@@ -163,6 +163,33 @@ class User extends Authenticatable implements MustVerifyEmail
     public function favoritedCollections(): BelongsToMany
     {
         return $this->belongsToMany(Collection::class, 'collection_favorites')
+            ->withPivot('created_at');
+    }
+
+    /**
+     * Artifacts this user has starred/favorited.
+     */
+    public function favoritedArtifacts(): BelongsToMany
+    {
+        return $this->belongsToMany(Artifact::class, 'artifact_favorites')
+            ->withTimestamps();
+    }
+
+    /**
+     * Exhibitions this user has starred/favorited.
+     */
+    public function favoritedExhibitions(): BelongsToMany
+    {
+        return $this->belongsToMany(Exhibition::class, 'exhibition_favorites')
+            ->withTimestamps();
+    }
+
+    /**
+     * Auctions this user is watching.
+     */
+    public function watchedAuctions(): BelongsToMany
+    {
+        return $this->belongsToMany(Auction::class, 'auction_watchers')
             ->withTimestamps();
     }
 
